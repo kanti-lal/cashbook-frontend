@@ -1,0 +1,161 @@
+import { useState, useMemo, useEffect } from "react";
+import { Plus, ChevronRight, Search, FileText } from "lucide-react";
+import { Link } from "react-router-dom";
+import { getSuppliers } from "../utils/storage";
+import AddSupplierForm from "../components/AddSupplierForm";
+import { useBusiness } from "../context/BusinessContext";
+import Modal from "../components/Modal";
+
+type SortOption = "name" | "oldest" | "highest" | "lowest";
+
+export default function SuppliersPage() {
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortBy, setSortBy] = useState<SortOption>("name");
+  const { activeBusiness, refreshSuppliers } = useBusiness();
+  const [suppliers, setSuppliers] = useState([]);
+
+  // Fetch suppliers when needed
+  const fetchSuppliers = () => {
+    if (activeBusiness) {
+      const fetchedSuppliers = getSuppliers(activeBusiness.id);
+      setSuppliers(fetchedSuppliers);
+    }
+  };
+
+  // Initial fetch and refresh when needed
+  useEffect(() => {
+    fetchSuppliers();
+  }, [activeBusiness]);
+
+  const filteredAndSortedSuppliers = useMemo(() => {
+    let result = [...suppliers];
+
+    // Apply search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        (supplier) =>
+          supplier.name.toLowerCase().includes(query) ||
+          supplier.phoneNumber.includes(query)
+      );
+    }
+
+    // Apply sorting
+    switch (sortBy) {
+      case "name":
+        result.sort((a, b) => a.name.localeCompare(b.name));
+        break;
+      case "oldest":
+        result.sort((a, b) => parseInt(a.id) - parseInt(b.id));
+        break;
+      case "highest":
+        result.sort((a, b) => Math.abs(b.balance) - Math.abs(a.balance));
+        break;
+      case "lowest":
+        result.sort((a, b) => Math.abs(a.balance) - Math.abs(b.balance));
+        break;
+    }
+
+    return result;
+  }, [suppliers, searchQuery, sortBy]);
+
+  const handleAddSupplier = () => {
+    fetchSuppliers(); // Refresh the list
+    setShowAddModal(false);
+    refreshSuppliers(); // Refresh global state
+  };
+
+  if (!activeBusiness) {
+    return (
+      <div className="max-w-md mx-auto p-4 text-center">
+        <p className="text-gray-600">Please select a business first</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="max-w-md mx-auto p-4 pb-20">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Suppliers</h1>
+        <button
+          onClick={() => setShowAddModal(true)}
+          className="p-2 rounded-full bg-purple-100 text-purple-600 hover:bg-purple-200 transition-colors"
+        >
+          <Plus size={24} />
+        </button>
+      </div>
+
+      {/* Modal for adding supplier */}
+      <Modal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        title="Add New Supplier"
+      >
+        <AddSupplierForm onAdd={handleAddSupplier} />
+      </Modal>
+
+      {/* View Report Button */}
+      <Link
+        to="/suppliers/report"
+        className="w-full mb-6 py-3 px-4 bg-purple-100 text-purple-700 rounded-lg flex items-center justify-center gap-2 hover:bg-purple-200 transition-colors"
+      >
+        <FileText size={20} />
+        View Supplier Report
+      </Link>
+
+      {/* Search and Sort in one line */}
+      <div className="mb-4 flex gap-2">
+        <div className="relative flex-1">
+          <input
+            type="text"
+            placeholder="Search suppliers..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full pl-10 pr-2 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+          />
+          <Search className="absolute left-3 top-2.5 text-gray-400" size={20} />
+        </div>
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value as SortOption)}
+          className="px-2 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 bg-white"
+        >
+          <option value="name">A-Z</option>
+          <option value="oldest">Date ↑</option>
+          <option value="highest">Amt ↓</option>
+          <option value="lowest">Amt ↑</option>
+        </select>
+      </div>
+
+      <div className="space-y-2">
+        {filteredAndSortedSuppliers.length === 0 ? (
+          <p className="text-center text-gray-500 py-4">No suppliers found</p>
+        ) : (
+          filteredAndSortedSuppliers.map((supplier) => (
+            <Link
+              key={supplier.id}
+              to={`/suppliers/${supplier.id}`}
+              className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 flex justify-between items-center"
+            >
+              <div>
+                <h3 className="font-medium">{supplier.name}</h3>
+                <p className="text-sm text-gray-600">{supplier.phoneNumber}</p>
+              </div>
+              <div className="flex items-center gap-4">
+                <span
+                  className={`font-medium ${
+                    supplier.balance >= 0 ? "text-green-600" : "text-red-600"
+                  }`}
+                >
+                  ₹{Math.abs(supplier.balance)}
+                </span>
+                <ChevronRight className="text-gray-400" size={20} />
+              </div>
+            </Link>
+          ))
+        )}
+      </div>
+    </div>
+  );
+}

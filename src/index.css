@@ -1,0 +1,35 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+}
+
+@keyframes scale-in {
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+@keyframes check-mark {
+  from {
+    stroke-dashoffset: 48;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-[scale-in_0.3s_ease-out_forwards] {
+  animation: scale-in 0.3s ease-out forwards;
+}
+
+.animate-[check-mark_0.4s_ease-out_forwards] {
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  animation: check-mark 0.4s ease-out forwards;
+}
