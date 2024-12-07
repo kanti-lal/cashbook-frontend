@@ -1,204 +1,3 @@
-// import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-// import { Business } from '../types';
-// import { getActiveBusiness, setActiveBusiness as saveActiveBusiness } from '../utils/storage';
-
-// interface BusinessContextType {
-//   activeBusiness: Business | null;
-//   setActiveBusiness: (business: Business) => void;
-//   refreshBusinesses: () => void;
-//   refreshCustomers: () => void;
-//   refreshSuppliers: () => void;
-// }
-
-// const BusinessContext = createContext<BusinessContextType | undefined>(undefined);
-
-// export function BusinessProvider({ children }: { children: ReactNode }) {
-//   const [activeBusiness, setActiveBusinessState] = useState<Business | null>(null);
-//   const [refreshTrigger, setRefreshTrigger] = useState(0);
-//   const [customerRefreshTrigger, setCustomerRefreshTrigger] = useState(0);
-//   const [supplierRefreshTrigger, setSupplierRefreshTrigger] = useState(0);
-
-//   useEffect(() => {
-//     const storedBusiness = getActiveBusiness();
-//     if (storedBusiness) {
-//       setActiveBusinessState(storedBusiness);
-//     }
-//   }, [refreshTrigger]);
-
-//   const handleSetActiveBusiness = (business: Business) => {
-//     saveActiveBusiness(business);
-//     setActiveBusinessState(business);
-//   };
-
-//   const refreshBusinesses = () => {
-//     setRefreshTrigger(prev => prev + 1);
-//   };
-
-//   const refreshCustomers = () => {
-//     setCustomerRefreshTrigger(prev => prev + 1);
-//   };
-
-//   const refreshSuppliers = () => {
-//     setSupplierRefreshTrigger(prev => prev + 1);
-//   };
-
-//   return (
-//     <BusinessContext.Provider
-//       value={{
-//         activeBusiness,
-//         setActiveBusiness: handleSetActiveBusiness,
-//         refreshBusinesses,
-//         refreshCustomers,
-//         refreshSuppliers,
-//       }}
-//     >
-//       {children}
-//     </BusinessContext.Provider>
-//   );
-// }
-
-// export function useBusiness() {
-//   const context = useContext(BusinessContext);
-//   if (context === undefined) {
-//     throw new Error('useBusiness must be used within a BusinessProvider');
-//   }
-//   return context;
-// }
-
-// context/BusinessContext.tsx
-
-// import { createContext, useContext, ReactNode, useState } from "react";
-// import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-// import { Business, Customer, Supplier, Transaction } from "../api/types";
-// import { businessesApi } from "../api/businesses";
-// import { customersApi } from "../api/customers";
-// import { suppliersApi } from "../api/suppliers";
-// import { transactionsApi } from "../api/transactions";
-
-// interface BusinessContextType {
-//   activeBusiness: Business | null;
-//   setActiveBusiness: (business: Business | null) => void;
-//   businesses: Business[];
-//   customers: Customer[];
-//   suppliers: Supplier[];
-//   transactions: Transaction[];
-//   isLoading: boolean;
-//   createBusiness: (business: Business) => Promise<Business>;
-//   createCustomer: (customer: Omit<Customer, "id">) => Promise<Customer>;
-//   createSupplier: (supplier: Omit<Supplier, "id">) => Promise<Supplier>;
-//   createTransaction: (
-//     transaction: Omit<Transaction, "id">
-//   ) => Promise<Transaction>;
-// }
-
-// const BusinessContext = createContext<BusinessContextType | undefined>(
-//   undefined
-// );
-
-// export function BusinessProvider({ children }: { children: ReactNode }) {
-//   const queryClient = useQueryClient();
-
-//   // Store active business in state
-//   const [activeBusiness, setActiveBusiness] = useState<Business | null>(null);
-
-//   // Queries
-//   const { data: businesses = [], isLoading: isLoadingBusinesses } = useQuery({
-//     queryKey: ["businesses"],
-//     queryFn: businessesApi.getAll,
-//   });
-
-//   const { data: customers = [], isLoading: isLoadingCustomers } = useQuery({
-//     queryKey: ["customers", activeBusiness?.id],
-//     queryFn: () => customersApi.getAll(activeBusiness!.id),
-//     enabled: !!activeBusiness,
-//   });
-
-//   const { data: suppliers = [], isLoading: isLoadingSuppliers } = useQuery({
-//     queryKey: ["suppliers", activeBusiness?.id],
-//     queryFn: () => suppliersApi.getAll(activeBusiness!.id),
-//     enabled: !!activeBusiness,
-//   });
-
-//   const { data: transactions = [], isLoading: isLoadingTransactions } =
-//     useQuery({
-//       queryKey: ["transactions", activeBusiness?.id],
-//       queryFn: () => transactionsApi.getAll(activeBusiness!.id),
-//       enabled: !!activeBusiness,
-//     });
-
-//   // Mutations
-//   const createBusinessMutation = useMutation({
-//     mutationFn: businessesApi.create,
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({ queryKey: ["businesses"] });
-//     },
-//   });
-
-//   const createCustomerMutation = useMutation({
-//     mutationFn: (customer: Omit<Customer, "id">) =>
-//       customersApi.create(activeBusiness!.id, customer),
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({
-//         queryKey: ["customers", activeBusiness?.id],
-//       });
-//     },
-//   });
-
-//   const createSupplierMutation = useMutation({
-//     mutationFn: (supplier: Omit<Supplier, "id">) =>
-//       suppliersApi.create(activeBusiness!.id, supplier),
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({
-//         queryKey: ["suppliers", activeBusiness?.id],
-//       });
-//     },
-//   });
-
-//   const createTransactionMutation = useMutation({
-//     mutationFn: (transaction: Omit<Transaction, "id">) =>
-//       transactionsApi.create(activeBusiness!.id, transaction),
-//     onSuccess: () => {
-//       queryClient.invalidateQueries({
-//         queryKey: ["transactions", activeBusiness?.id],
-//       });
-//     },
-//   });
-
-//   const isLoading =
-//     isLoadingBusinesses ||
-//     isLoadingCustomers ||
-//     isLoadingSuppliers ||
-//     isLoadingTransactions;
-
-//   return (
-//     <BusinessContext.Provider
-//       value={{
-//         activeBusiness,
-//         setActiveBusiness,
-//         businesses,
-//         customers,
-//         suppliers,
-//         transactions,
-//         isLoading,
-//         createBusiness: createBusinessMutation.mutateAsync,
-//         createCustomer: createCustomerMutation.mutateAsync,
-//         createSupplier: createSupplierMutation.mutateAsync,
-//         createTransaction: createTransactionMutation.mutateAsync,
-//       }}
-//     >
-//       {children}
-//     </BusinessContext.Provider>
-//   );
-// }
-
-// export function useBusiness() {
-//   const context = useContext(BusinessContext);
-//   if (context === undefined) {
-//     throw new Error("useBusiness must be used within a BusinessProvider");
-//   }
-//   return context;
-// }
-
 import {
   createContext,
   useContext,
@@ -212,6 +11,7 @@ import { businessesApi } from "../api/businesses";
 import { customersApi } from "../api/customers";
 import { suppliersApi } from "../api/suppliers";
 import { transactionsApi } from "../api/transactions";
+import { useAuth } from "./AuthContext";
 
 // Local storage utility functions
 const ACTIVE_BUSINESS_KEY = "activeBusiness";
@@ -245,6 +45,7 @@ interface BusinessContextType {
   createTransaction: (
     transaction: Omit<Transaction, "id">
   ) => Promise<Transaction>;
+  refreshBusinesses: () => void;
 }
 
 const BusinessContext = createContext<BusinessContextType | undefined>(
@@ -252,36 +53,47 @@ const BusinessContext = createContext<BusinessContextType | undefined>(
 );
 
 export function BusinessProvider({ children }: { children: ReactNode }) {
+  const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
-
   // Initialize active business from localStorage
   const [activeBusiness, setActiveBusiness] = useState<Business | null>(
     localStorageUtils.getActiveBusiness()
   );
 
   // Queries
-  const { data: businesses = [], isLoading: isLoadingBusinesses } = useQuery({
+  const {
+    data: businesses = [],
+    isLoading: isLoadingBusinesses,
+    refetch: refetchBusinesses,
+  } = useQuery({
     queryKey: ["businesses"],
     queryFn: businessesApi.getAll,
+    enabled: isAuthenticated,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 30 * 60 * 1000,
+    refetchOnMount: "always",
+    refetchOnWindowFocus: true, // Refetch when window regains focus
+    retry: 2, // Retry failed fetches
   });
 
   const { data: customers = [], isLoading: isLoadingCustomers } = useQuery({
     queryKey: ["customers", activeBusiness?.id],
     queryFn: () => customersApi.getAll(activeBusiness!.id),
-    enabled: !!activeBusiness,
+    enabled: !!activeBusiness?.id,
   });
 
   const { data: suppliers = [], isLoading: isLoadingSuppliers } = useQuery({
     queryKey: ["suppliers", activeBusiness?.id],
     queryFn: () => suppliersApi.getAll(activeBusiness!.id),
-    enabled: !!activeBusiness,
+    enabled: !!activeBusiness?.id,
   });
 
   const { data: transactions = [], isLoading: isLoadingTransactions } =
     useQuery({
       queryKey: ["transactions", activeBusiness?.id],
       queryFn: () => transactionsApi.getAll(activeBusiness!.id),
-      enabled: !!activeBusiness,
+      staleTime: Infinity,
+      enabled: !!activeBusiness?.id,
     });
 
   // Custom setActiveBusiness to update localStorage
@@ -296,7 +108,10 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
     onSuccess: (newBusiness) => {
       // Update localStorage when creating a business
       localStorageUtils.setActiveBusiness(newBusiness);
+      // Force refetch businesses
       queryClient.invalidateQueries({ queryKey: ["businesses"] });
+      // Set active business
+      handleSetActiveBusiness(newBusiness);
       return newBusiness;
     },
   });
@@ -330,6 +145,9 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
       });
     },
   });
+  const refreshBusinesses = () => {
+    refetchBusinesses();
+  };
 
   const isLoading =
     isLoadingBusinesses ||
@@ -351,6 +169,7 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
         createCustomer: createCustomerMutation.mutateAsync,
         createSupplier: createSupplierMutation.mutateAsync,
         createTransaction: createTransactionMutation.mutateAsync,
+        refreshBusinesses,
       }}
     >
       {children}

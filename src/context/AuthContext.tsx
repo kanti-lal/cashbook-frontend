@@ -1,0 +1,173 @@
+import {
+  createContext,
+  useContext,
+  useMemo,
+  ReactNode,
+  useState,
+  useEffect,
+} from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { authApi, RegisterData, UpdateProfileData } from "../api/auth";
+
+const USER_KEY = "auth_user";
+
+interface User {
+  id: number;
+  email: string;
+  name: string;
+  mobile?: string;
+  address?: string;
+  dateOfBirth?: string;
+}
+
+interface AuthContextType {
+  user: User | null;
+  isLoading: boolean;
+  isAuthenticated: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
+  register: (data: RegisterData) => Promise<void>;
+  updateProfile: (data: UpdateProfileData) => Promise<void>;
+  forgotPassword: (email: string) => Promise<void>;
+  resetPassword: (token: string, password: string) => Promise<void>;
+  updatePassword: (
+    currentPassword: string,
+    newPassword: string
+  ) => Promise<void>;
+}
+
+const AuthContext = createContext<AuthContextType>({} as AuthContextType);
+
+export function useAuth() {
+  return useContext(AuthContext);
+}
+
+export function AuthProvider({ children }: { children: ReactNode }) {
+  const queryClient = useQueryClient();
+  const [user, setUser] = useState<User | null>(() => {
+    const storedUser = localStorage.getItem(USER_KEY);
+    return storedUser ? JSON.parse(storedUser) : null;
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    const token = localStorage.getItem("auth_token");
+    return !!token;
+  });
+
+  const loginMutation = useMutation({
+    mutationFn: authApi.login,
+    onSuccess: (user) => {
+      setUser(user);
+      setIsAuthenticated(true);
+      localStorage.setItem(USER_KEY, JSON.stringify(user));
+    },
+  });
+
+  const registerMutation = useMutation({
+    mutationFn: authApi.register,
+    onSuccess: (user) => {
+      setUser(user);
+      setIsAuthenticated(true);
+      localStorage.setItem(USER_KEY, JSON.stringify(user));
+    },
+  });
+
+  const updateProfileMutation = useMutation({
+    mutationFn: authApi.updateProfile,
+    onSuccess: (user) => {
+      setUser(user);
+      localStorage.setItem(USER_KEY, JSON.stringify(user));
+      queryClient.setQueryData(["user"], user);
+    },
+  });
+
+  const forgotPasswordMutation = useMutation({
+    mutationFn: authApi.forgotPassword,
+  });
+
+  const resetPasswordMutation = useMutation({
+    mutationFn: authApi.resetPassword,
+  });
+
+  const updatePasswordMutation = useMutation({
+    mutationFn: authApi.updatePassword,
+  });
+
+  const login = async (email: string, password: string) => {
+    setIsLoading(true);
+    try {
+      await loginMutation.mutateAsync({ email, password });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const register = async (data: RegisterData) => {
+    setIsLoading(true);
+    await registerMutation.mutateAsync(data);
+    setIsLoading(false);
+  };
+
+  const updateProfile = async (data: UpdateProfileData) => {
+    setIsLoading(true);
+    await updateProfileMutation.mutateAsync(data);
+    setIsLoading(false);
+  };
+
+  const forgotPassword = async (email: string) => {
+    await forgotPasswordMutation.mutateAsync({ email });
+  };
+
+  const resetPassword = async (token: string, password: string) => {
+    await resetPasswordMutation.mutateAsync({ token, password });
+  };
+
+  const updatePassword = async (
+    currentPassword: string,
+    newPassword: string
+  ) => {
+    await updatePasswordMutation.mutateAsync({ currentPassword, newPassword });
+  };
+
+  const logout = () => {
+    authApi.logout();
+    localStorage.removeItem(USER_KEY);
+    queryClient.removeQueries({ queryKey: ["user"] });
+    setUser(null);
+    setIsAuthenticated(false);
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("auth_token");
+    setIsAuthenticated(!!token);
+  }, []);
+
+  const value = useMemo(
+    () => ({
+      user,
+      isLoading,
+      isAuthenticated,
+      login,
+      logout,
+      register,
+      updateProfile,
+      forgotPassword,
+      resetPassword,
+      updatePassword,
+    }),
+    [
+      user,
+      isLoading,
+      isAuthenticated,
+      login,
+      logout,
+      register,
+      updateProfile,
+      forgotPassword,
+      resetPassword,
+      updatePassword,
+    ]
+  );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+}
