@@ -37,7 +37,6 @@ export default function CashbookPage() {
   const [filterOption, setFilterOption] = useState<FilterOption>("newest");
 
   const navigate = useNavigate(); // Add navigation hook
-  // Replace storage utilities with BusinessContext
   const { activeBusiness, transactions, customers, suppliers } = useBusiness();
 
   const handleTransactionDetailClick = (transactionId: string) => {
