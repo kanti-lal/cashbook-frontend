@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { Link } from "react-router-dom";
-import ReportView from "../components/ReportView";
-import { getCustomers, getTransactions } from "../utils/storage";
 import { useBusiness } from "../context/BusinessContext";
+import TransactionsList from "../components/TransactionsList";
 
 type ViewMode = "transactions" | "report";
 type FilterOption =
@@ -18,7 +17,7 @@ export default function AllCustomersReportPage() {
   const [viewMode, setViewMode] = useState<ViewMode>("transactions");
   const [filterOption, setFilterOption] = useState<FilterOption>("newest");
   const [searchQuery, setSearchQuery] = useState("");
-  const { activeBusiness } = useBusiness();
+  const { activeBusiness, transactions, customers } = useBusiness();
 
   if (!activeBusiness) {
     return (
@@ -28,12 +27,9 @@ export default function AllCustomersReportPage() {
     );
   }
 
-  const customers = getCustomers(activeBusiness.id);
-  const allTransactions = getTransactions(activeBusiness.id);
-
   // Get only customer transactions for this business
-  const customerTransactions = allTransactions.filter(
-    (t) => t.customerId && t.businessId === activeBusiness.id
+  const customerTransactions = transactions.filter(
+    (t) => t.customerId !== undefined && t.customerId !== null
   );
 
   // Create a map of customer names
@@ -50,6 +46,29 @@ export default function AllCustomersReportPage() {
   const totalGiven = customerTransactions
     .filter((t) => t.type === "OUT")
     .reduce((sum, t) => sum + t.amount, 0);
+
+  // Add customer-wise summary calculation
+  const customerSummary = customers.map((customer) => {
+    const customerTxns = customerTransactions.filter(
+      (t) => t.customerId === customer.id
+    );
+
+    const received = customerTxns
+      .filter((t) => t.type === "IN")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const given = customerTxns
+      .filter((t) => t.type === "OUT")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    return {
+      id: customer.id,
+      name: customer.name,
+      received,
+      given,
+      balance: received - given,
+    };
+  });
 
   return (
     <div className="max-w-md mx-auto p-4 pb-20">
@@ -98,12 +117,58 @@ export default function AllCustomersReportPage() {
         </button>
       </div>
 
-      <ReportView
-        transactions={customerTransactions}
-        entityNames={customerNames}
-        searchQuery={searchQuery}
-        filterOption={filterOption}
-      />
+      {viewMode === "transactions" ? (
+        <TransactionsList
+          transactions={customerTransactions}
+          customerNames={customerNames}
+          searchQuery={searchQuery}
+          filterOption={filterOption}
+        />
+      ) : (
+        <div className="space-y-4">
+          {/* Report View */}
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-2 text-left text-sm text-gray-600">
+                    Customer
+                  </th>
+                  <th className="px-4 py-2 text-right text-sm text-gray-600">
+                    Received
+                  </th>
+                  <th className="px-4 py-2 text-right text-sm text-gray-600">
+                    Given
+                  </th>
+                  <th className="px-4 py-2 text-right text-sm text-gray-600">
+                    Balance
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {customerSummary.map((summary) => (
+                  <tr key={summary.id} className="border-b">
+                    <td className="px-4 py-2">{summary.name}</td>
+                    <td className="px-4 py-2 text-right text-green-600">
+                      ₹{summary.received}
+                    </td>
+                    <td className="px-4 py-2 text-right text-red-600">
+                      ₹{summary.given}
+                    </td>
+                    <td
+                      className={`px-4 py-2 text-right font-medium ${
+                        summary.balance >= 0 ? "text-green-600" : "text-red-600"
+                      }`}
+                    >
+                      ₹{summary.balance}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

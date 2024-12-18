@@ -1,10 +1,10 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Plus, ChevronRight, Search, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
-import { getSuppliers } from "../utils/storage";
 import AddSupplierForm from "../components/AddSupplierForm";
 import { useBusiness } from "../context/BusinessContext";
 import Modal from "../components/Modal";
+import { Supplier } from "../types";
 
 type SortOption = "name" | "oldest" | "highest" | "lowest";
 
@@ -12,21 +12,30 @@ export default function SuppliersPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("name");
-  const { activeBusiness, refreshSuppliers } = useBusiness();
-  const [suppliers, setSuppliers] = useState([]);
+  // const [suppliers, setSuppliers] = useState([]);
+  const { activeBusiness, suppliers, createSupplier } = useBusiness();
 
-  // Fetch suppliers when needed
-  const fetchSuppliers = () => {
-    if (activeBusiness) {
-      const fetchedSuppliers = getSuppliers(activeBusiness.id);
-      setSuppliers(fetchedSuppliers);
-    }
-  };
+  // // Fetch suppliers when needed
+  // const fetchSuppliers = () => {
+  //   if (activeBusiness) {
+  //     const fetchedSuppliers = getSuppliers(activeBusiness.id);
+  //     setSuppliers(fetchedSuppliers);
+  //   }
+  // };
 
   // Initial fetch and refresh when needed
-  useEffect(() => {
-    fetchSuppliers();
-  }, [activeBusiness]);
+
+  // Calculate total balances
+  const totalToGet = suppliers.reduce(
+    (sum, supplier) =>
+      supplier.balance < 0 ? sum + Math.abs(supplier.balance) : sum,
+    0
+  );
+
+  const totalToGive = suppliers.reduce(
+    (sum, supplier) => (supplier.balance > 0 ? sum + supplier.balance : sum),
+    0
+  );
 
   const filteredAndSortedSuppliers = useMemo(() => {
     let result = [...suppliers];
@@ -60,10 +69,19 @@ export default function SuppliersPage() {
     return result;
   }, [suppliers, searchQuery, sortBy]);
 
-  const handleAddSupplier = () => {
-    fetchSuppliers(); // Refresh the list
-    setShowAddModal(false);
-    refreshSuppliers(); // Refresh global state
+  // const handleAddSupplier = () => {
+  //   fetchSuppliers(); // Refresh the list
+  //   setShowAddModal(false);
+  //   refreshSuppliers(); // Refresh global state
+  // };
+
+  const handleAddSupplier = async (supplierData: Supplier) => {
+    try {
+      await createSupplier(supplierData);
+      setShowAddModal(false);
+    } catch (error) {
+      console.error("Error creating customer:", error);
+    }
   };
 
   if (!activeBusiness) {
@@ -103,6 +121,18 @@ export default function SuppliersPage() {
         <FileText size={20} />
         View Supplier Report
       </Link>
+
+      {/* Balance Summary */}
+      <div className="grid grid-cols-2 gap-4 mb-6">
+        <div className="bg-green-50 p-4 rounded-lg">
+          <p className="text-sm text-green-800">You Will Give</p>
+          <p className="text-lg font-semibold text-green-600">₹{totalToGive}</p>
+        </div>
+        <div className="bg-red-50 p-4 rounded-lg">
+          <p className="text-sm text-red-800">You Will Get</p>
+          <p className="text-lg font-semibold text-red-600">₹{totalToGet}</p>
+        </div>
+      </div>
 
       {/* Search and Sort in one line */}
       <div className="mb-4 flex gap-2">

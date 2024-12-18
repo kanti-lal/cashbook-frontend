@@ -1,15 +1,19 @@
 import { useState } from "react";
-import { saveSupplier } from "../utils/storage";
 import { AlertCircle } from "lucide-react";
 import SuccessAnimation from "./SuccessAnimation";
 import { useBusiness } from "../context/BusinessContext";
+import { Supplier } from "../types";
 
 interface ValidationErrors {
   name?: string;
   phoneNumber?: string;
 }
 
-export default function AddSupplierForm({ onAdd }: { onAdd: () => void }) {
+export default function AddSupplierForm({
+  onAdd,
+}: {
+  onAdd: (supplierData: Supplier) => void;
+}) {
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [errors, setErrors] = useState<ValidationErrors>({});
@@ -40,7 +44,15 @@ export default function AddSupplierForm({ onAdd }: { onAdd: () => void }) {
 
     if (!validateForm() || !activeBusiness) return;
 
-    saveSupplier({
+    // saveSupplier({
+    //   id: Date.now().toString(),
+    //   name: name.trim(),
+    //   phoneNumber: phoneNumber.trim(),
+    //   balance: 0,
+    //   businessId: activeBusiness.id,
+    // });
+
+    onAdd({
       id: Date.now().toString(),
       name: name.trim(),
       phoneNumber: phoneNumber.trim(),
@@ -61,7 +73,7 @@ export default function AddSupplierForm({ onAdd }: { onAdd: () => void }) {
 
   const handleSuccessComplete = () => {
     setShowSuccess(false);
-    onAdd();
+    // onAdd();
   };
 
   if (!activeBusiness) {

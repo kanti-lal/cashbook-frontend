@@ -1,11 +1,14 @@
 import { useParams, useNavigate } from "react-router-dom";
+
 import { format } from "date-fns";
-import { ArrowDownCircle, ArrowUpCircle, Pencil, Trash2 } from "lucide-react";
 import {
-  getCustomerById,
-  getCustomerTransactions,
-  deleteCustomer,
-} from "../utils/storage";
+  ArrowDownCircle,
+  ArrowUpCircle,
+  CircleArrowLeft,
+  Pencil,
+  Trash2,
+} from "lucide-react";
+
 import TransactionForm from "../components/TransactionForm";
 import EditCustomerForm from "../components/EditCustomerForm";
 import ReportView from "../components/ReportView";
@@ -24,8 +27,18 @@ export default function CustomerDetailPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [transactionType, setTransactionType] = useState<"IN" | "OUT">("IN");
   const [viewMode, setViewMode] = useState<ViewMode>("transactions");
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const { activeBusiness, refreshCustomers } = useBusiness();
+
+  const {
+    activeBusiness,
+    getCustomerById,
+    transactions,
+    updateCustomer,
+    deleteCustomer,
+    getCustomerTransactions,
+  } = useBusiness();
+
+  const { data: customerDetails, isLoading: isLoadingCustomer } =
+    getCustomerById(customerId);
 
   if (!activeBusiness || !customerId) {
     return (
@@ -35,15 +48,27 @@ export default function CustomerDetailPage() {
     );
   }
 
-  const customer = getCustomerById(customerId, activeBusiness.id);
-  const transactions = getCustomerTransactions(customerId, activeBusiness.id);
+  const {
+    data: customerTransactions,
+    isLoading: isLoadingSupplierTransactions,
+  } = getCustomerTransactions(customerId);
 
-  if (!customer) {
-    return <div className="p-4">Customer not found</div>;
+  if (isLoadingCustomer || isLoadingSupplierTransactions) {
+    return (
+      <div className="p-4 max-w-md mx-auto text-center">
+        Loading customer details...
+      </div>
+    );
+  }
+
+  if (!customerDetails) {
+    return (
+      <div className="p-4 max-w-md mx-auto text-center">Customer not found</div>
+    );
   }
 
   // Group transactions by date
-  const groupedTransactions = transactions.reduce(
+  const groupedTransactions = (customerTransactions || []).reduce(
     (groups: any[], transaction) => {
       const date = format(new Date(transaction.date), "yyyy-MM-dd");
       const existingGroup = groups.find((group) => group.date === date);
@@ -72,6 +97,7 @@ export default function CustomerDetailPage() {
   groupedTransactions.sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
+
   groupedTransactions.forEach((group) => {
     group.transactions.sort(
       (a: any, b: any) =>
@@ -81,28 +107,44 @@ export default function CustomerDetailPage() {
 
   const handleTransactionComplete = () => {
     setShowTransactionForm(false);
-    setRefreshTrigger((prev) => prev + 1);
   };
 
-  const handleEditComplete = () => {
-    setShowEditModal(false);
-    setRefreshTrigger((prev) => prev + 1);
-    refreshCustomers();
+  const handleEditComplete = async (customerData: any) => {
+    try {
+      await updateCustomer({
+        customerId: customerId,
+        data: {
+          name: customerData?.name,
+          phoneNumber: customerData?.phoneNumber,
+          balance: customerData?.balance,
+        },
+      });
+      setShowEditModal(false);
+    } catch (error) {
+      console.error("Error updating customer:", error);
+    }
   };
 
   const handleDelete = () => {
-    deleteCustomer(customerId, activeBusiness.id);
-    refreshCustomers();
+    deleteCustomer(customerId, activeBusiness?.id);
     navigate("/customers");
   };
 
   return (
     <div className="max-w-md mx-auto p-4 pb-20">
+      <div className="flex items-center gap-2 mb-4">
+        <button onClick={() => navigate(-1)} className="">
+          <CircleArrowLeft size={24} className="text-gray-900" />
+        </button>
+        <h1 className="text-2xl font-bold ">Customer Details page</h1>
+      </div>
       <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
         <div className="flex justify-between items-start mb-2">
           <div>
-            <h1 className="text-xl font-bold">{customer.name}</h1>
-            <p className="text-gray-600 text-sm">{customer.phoneNumber}</p>
+            <h1 className="text-xl font-bold">{customerDetails.name}</h1>
+            <p className="text-gray-600 text-sm">
+              {customerDetails.phoneNumber}
+            </p>
           </div>
           <div className="flex gap-2">
             <button
@@ -141,10 +183,10 @@ export default function CustomerDetailPage() {
         </div>
         <p
           className={`text-md mt-2 font-semibold ${
-            customer.balance >= 0 ? "text-green-600" : "text-red-600"
+            customerDetails.balance >= 0 ? "text-green-600" : "text-red-600"
           }`}
         >
-          Balance: ₹{Math.abs(customer.balance)}
+          Balance: ₹{Math.abs(customerDetails.balance)}
         </p>
       </div>
 
@@ -154,7 +196,10 @@ export default function CustomerDetailPage() {
         onClose={() => setShowEditModal(false)}
         title="Edit Customer"
       >
-        <EditCustomerForm customer={customer} onComplete={handleEditComplete} />
+        <EditCustomerForm
+          customer={customerDetails}
+          onComplete={handleEditComplete}
+        />
       </Modal>
 
       {/* Delete Confirmation Modal */}
@@ -185,20 +230,19 @@ export default function CustomerDetailPage() {
         </div>
       </Modal>
 
-      {showTransactionForm && (
-        <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <h2 className="text-lg font-semibold mb-4">
-            {transactionType === "IN" ? "Get Money" : "Give Money"}
-          </h2>
-          <TransactionForm
-            type={transactionType}
-            customerId={customer.id}
-            onComplete={handleTransactionComplete}
-            onCancel={() => setShowTransactionForm(false)}
-            businessId={activeBusiness.id}
-          />
-        </div>
-      )}
+      <Modal
+        isOpen={showTransactionForm}
+        onClose={() => setShowTransactionForm(false)}
+        title={transactionType === "IN" ? "Get Money" : "Give Money"}
+      >
+        <TransactionForm
+          type={transactionType}
+          customerId={customerDetails.id}
+          onComplete={handleTransactionComplete}
+          onCancel={() => setShowTransactionForm(false)}
+          businessId={activeBusiness.id}
+        />
+      </Modal>
 
       {/* View Mode Tabs */}
       <div className="flex mb-4 border-b">
@@ -256,8 +300,7 @@ export default function CustomerDetailPage() {
                   <TransactionItem
                     key={transaction.id}
                     transaction={transaction}
-                    entityName={customer.name}
-                    onDelete={() => setRefreshTrigger((prev) => prev + 1)}
+                    entityName={customerDetails.name}
                   />
                 ))}
               </div>
@@ -273,7 +316,7 @@ export default function CustomerDetailPage() {
       ) : (
         <ReportView
           transactions={transactions}
-          entityNames={{ [customer.id]: customer.name }}
+          entityNames={{ [customerDetails.id]: customerDetails.name }}
           searchQuery=""
           filterOption="newest"
         />

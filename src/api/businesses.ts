@@ -20,10 +20,28 @@ import { apiClient } from "./client";
 export const businessesApi = {
   getAll: async () => {
     try {
+      // Verify token exists before making request
+      const token = localStorage.getItem("auth_token");
+      if (!token) {
+        throw new Error("No authentication token found");
+      }
+
       const { data } = await apiClient.get<Business[]>("/businesses");
       return data;
     } catch (error) {
       console.error("Error fetching businesses:", error);
+
+      // Log specific error details
+      if (axios.isAxiosError(error)) {
+        console.error("Status:", error.response?.status);
+        console.error("Response data:", error.response?.data);
+
+        // Handle specific status codes
+        if (error.response?.status === 403) {
+          console.error("Access forbidden - Please check your permissions");
+        }
+      }
+
       throw error;
     }
   },
@@ -49,6 +67,10 @@ export const businessesApi = {
       if (axios.isAxiosError(error)) {
         console.error("Error response:", error.response?.data);
         console.error("Error status:", error.response?.status);
+
+        if (error.response?.status === 403) {
+          console.error("Access forbidden - Please check your permissions");
+        }
       }
 
       throw error;

@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { updateCustomer } from "../utils/storage";
 import { AlertCircle } from "lucide-react";
 import SuccessAnimation from "./SuccessAnimation";
 import { Customer } from "../types";
@@ -11,7 +10,7 @@ interface ValidationErrors {
 
 interface EditCustomerFormProps {
   customer: Customer;
-  onComplete: () => void;
+  onComplete: (customerData: any) => void;
 }
 
 export default function EditCustomerForm({
@@ -42,18 +41,16 @@ export default function EditCustomerForm({
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) return;
 
-    updateCustomer({
-      ...customer,
+    onComplete({
       name: name.trim(),
       phoneNumber: phoneNumber.trim(),
+      balance: customer.balance,
     });
-
-    setShowSuccess(true);
   };
 
   const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,7 +60,7 @@ export default function EditCustomerForm({
 
   const handleSuccessComplete = () => {
     setShowSuccess(false);
-    onComplete();
+    // onComplete();
   };
 
   if (showSuccess) {

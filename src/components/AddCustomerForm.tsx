@@ -3,13 +3,18 @@ import { saveCustomer } from "../utils/storage";
 import { AlertCircle } from "lucide-react";
 import SuccessAnimation from "./SuccessAnimation";
 import { useBusiness } from "../context/BusinessContext";
+import { Customer } from "../types";
 
 interface ValidationErrors {
   name?: string;
   phoneNumber?: string;
 }
 
-export default function AddCustomerForm({ onAdd }: { onAdd: () => void }) {
+export default function AddCustomerForm({
+  onAdd,
+}: {
+  onAdd: (customerData: Customer) => void;
+}) {
   const [name, setName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [errors, setErrors] = useState<ValidationErrors>({});
@@ -47,6 +52,13 @@ export default function AddCustomerForm({ onAdd }: { onAdd: () => void }) {
       balance: 0,
       businessId: activeBusiness.id,
     });
+    onAdd({
+      id: Date.now().toString(),
+      name: name.trim(),
+      phoneNumber: phoneNumber.trim(),
+      balance: 0,
+      businessId: activeBusiness.id,
+    });
 
     setName("");
     setPhoneNumber("");
@@ -61,7 +73,6 @@ export default function AddCustomerForm({ onAdd }: { onAdd: () => void }) {
 
   const handleSuccessComplete = () => {
     setShowSuccess(false);
-    onAdd();
   };
 
   if (!activeBusiness) {

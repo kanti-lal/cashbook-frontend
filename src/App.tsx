@@ -21,6 +21,8 @@ import NavBar from "./components/NavBar";
 import BusinessSelector from "./components/BusinessSelector";
 import "./index.css";
 import ProfilePage from "./pages/ProfilePage";
+import ProfileEditPage from "./pages/ProfileEditPage";
+import TransactionDetailPage from "./pages/TransactionDetailPage";
 
 function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -69,6 +71,15 @@ function App() {
               element={
                 <ProtectedRoute>
                   <CashbookPage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/transactions/:transactionId"
+              element={
+                <ProtectedRoute>
+                  <TransactionDetailPage />
                 </ProtectedRoute>
               }
             />
@@ -128,6 +139,15 @@ function App() {
               element={
                 <ProtectedRoute>
                   <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
+
+            <Route
+              path="/profile/edit"
+              element={
+                <ProtectedRoute>
+                  <ProfileEditPage />
                 </ProtectedRoute>
               }
             />

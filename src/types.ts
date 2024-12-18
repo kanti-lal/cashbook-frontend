@@ -9,7 +9,7 @@ export interface Customer {
   name: string;
   phoneNumber: string;
   balance: number;
-  businessId: string;
+  businessId?: string;
 }
 
 export interface Supplier {
@@ -17,19 +17,20 @@ export interface Supplier {
   name: string;
   phoneNumber: string;
   balance: number;
-  businessId: string;
+  businessId?: string;
 }
 
 export interface Transaction {
   id: string;
-  type: 'IN' | 'OUT';
+  type: "IN" | "OUT";
   amount: number;
   customerId?: string;
   supplierId?: string;
   description: string;
   date: string;
-  category: 'CUSTOMER' | 'SUPPLIER';
-  businessId: string;
+  category: "CUSTOMER" | "SUPPLIER";
+  businessId?: string;
+  paymentMode: "CASH" | "ONLINE";
 }
 
 export interface MonthlyAnalytics {
