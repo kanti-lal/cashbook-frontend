@@ -11,7 +11,6 @@ import {
   Legend,
   LineElement,
 } from "chart.js";
-import { getAnalytics, getTransactions } from "../utils/storage";
 import { format, parse } from "date-fns";
 import { useState } from "react";
 import { useBusiness } from "../context/BusinessContext";
@@ -32,7 +31,7 @@ type ChartType = "bar" | "line";
 
 export default function AnalyticsPage() {
   const [cashFlowChartType, setCashFlowChartType] = useState<ChartType>("bar");
-  const { activeBusiness } = useBusiness();
+  const { activeBusiness, transactions, getBusinessAnalytics } = useBusiness();
 
   if (!activeBusiness) {
     return (
@@ -42,8 +41,7 @@ export default function AnalyticsPage() {
     );
   }
 
-  const analytics = getAnalytics(activeBusiness.id);
-  const transactions = getTransactions(activeBusiness.id);
+  const { data: analyticsData = [] } = getBusinessAnalytics();
 
   // Calculate totals
   const totalIn = transactions.reduce(
@@ -57,11 +55,11 @@ export default function AnalyticsPage() {
   const balance = totalIn - totalOut;
 
   // Common data for both chart types
-  const labels = analytics.map((a) =>
+  const labels = analyticsData.map((a) =>
     format(parse(a.month, "yyyy-MM", new Date()), "MMM yyyy")
   );
-  const inData = analytics.map((a) => a.totalIn);
-  const outData = analytics.map((a) => a.totalOut);
+  const inData = analyticsData.map((a) => a.totalIn);
+  const outData = analyticsData.map((a) => a.totalOut);
 
   // Bar chart data
   const barChartData = {
@@ -214,7 +212,7 @@ export default function AnalyticsPage() {
 
       <div className="space-y-4">
         <h2 className="text-lg font-semibold">Monthly Breakdown</h2>
-        {analytics.map((month) => (
+        {analyticsData.map((month) => (
           <div key={month.month} className="bg-white p-4 rounded-lg shadow-sm">
             <h3 className="font-medium mb-2">
               {format(parse(month.month, "yyyy-MM", new Date()), "MMMM yyyy")}
@@ -242,6 +240,11 @@ export default function AnalyticsPage() {
           </div>
         ))}
       </div>
+
+      {/* <EnhancedAnalyticsCharts
+        transactions={transactions}
+        analyticsData={analyticsData}
+      /> */}
     </div>
   );
 }

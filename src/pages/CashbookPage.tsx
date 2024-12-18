@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { format, isSameDay, startOfToday } from "date-fns";
 import {
   ArrowDownCircle,
@@ -7,11 +7,11 @@ import {
   TrendingUp,
   Search,
 } from "lucide-react";
-import { getCustomers, getSuppliers, getTransactions } from "../utils/storage";
 import TransactionForm from "../components/TransactionForm";
 import { Transaction } from "../types";
 import Modal from "../components/Modal";
 import { useBusiness } from "../context/BusinessContext";
+import { useNavigate } from "react-router-dom";
 
 type EntityType = "CUSTOMER" | "SUPPLIER";
 type FilterOption =
@@ -35,24 +35,14 @@ export default function CashbookPage() {
   const [entityType, setEntityType] = useState<EntityType>("CUSTOMER");
   const [searchQuery, setSearchQuery] = useState("");
   const [filterOption, setFilterOption] = useState<FilterOption>("newest");
-  const { activeBusiness } = useBusiness();
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
-  // Get data based on active business
-  const customers = useMemo(
-    () => (activeBusiness ? getCustomers(activeBusiness.id) : []),
-    [activeBusiness, refreshTrigger]
-  );
+  const navigate = useNavigate(); // Add navigation hook
+  // Replace storage utilities with BusinessContext
+  const { activeBusiness, transactions, customers, suppliers } = useBusiness();
 
-  const suppliers = useMemo(
-    () => (activeBusiness ? getSuppliers(activeBusiness.id) : []),
-    [activeBusiness, refreshTrigger]
-  );
-
-  const transactions = useMemo(
-    () => (activeBusiness ? getTransactions(activeBusiness.id) : []),
-    [activeBusiness, refreshTrigger]
-  );
+  const handleTransactionDetailClick = (transactionId: string) => {
+    navigate(`/transactions/${transactionId}`);
+  };
 
   // Create a map of entity names for quick lookup
   const entityNames = useMemo(() => {
@@ -135,7 +125,7 @@ export default function CashbookPage() {
     // Then group by date
     const groups: { [key: string]: DayTransactions } = {};
 
-    filteredTransactions.forEach((transaction) => {
+    filteredTransactions.forEach((transaction: any) => {
       const dateKey = format(new Date(transaction.date), "yyyy-MM-dd");
 
       if (!groups[dateKey]) {
@@ -147,7 +137,11 @@ export default function CashbookPage() {
         };
       }
 
-      groups[dateKey].transactions.push(transaction);
+      groups[dateKey].transactions.push({
+        ...transaction,
+        businessId: activeBusiness!.id,
+        paymentMode: transaction.paymentMode || "CASH", // Add default payment mode
+      });
       if (transaction.type === "IN") {
         groups[dateKey].totalIn += transaction.amount;
       } else {
@@ -167,7 +161,6 @@ export default function CashbookPage() {
 
   const handleTransactionComplete = () => {
     setIsTransactionModalOpen(false);
-    setRefreshTrigger((prev) => prev + 1);
   };
 
   if (!activeBusiness) {
@@ -311,8 +304,16 @@ export default function CashbookPage() {
         </div>
         <TransactionForm
           type={transactionType}
-          customers={entityType === "CUSTOMER" ? customers : undefined}
-          suppliers={entityType === "SUPPLIER" ? suppliers : undefined}
+          customers={
+            entityType === "CUSTOMER"
+              ? customers.map((c) => ({ ...c, businessId: activeBusiness.id }))
+              : undefined
+          }
+          suppliers={
+            entityType === "SUPPLIER"
+              ? suppliers.map((s) => ({ ...s, businessId: activeBusiness.id }))
+              : undefined
+          }
           onComplete={handleTransactionComplete}
           onCancel={() => setIsTransactionModalOpen(false)}
           businessId={activeBusiness.id}
@@ -373,6 +374,9 @@ export default function CashbookPage() {
                       <div
                         key={transaction.id}
                         className="bg-white p-3 rounded-lg shadow-sm border border-gray-100"
+                        onClick={() =>
+                          handleTransactionDetailClick(transaction.id)
+                        }
                       >
                         <div className="flex justify-between items-start">
                           <div>
@@ -384,7 +388,9 @@ export default function CashbookPage() {
                             </p>
                             {transaction.description && (
                               <p className="text-sm text-gray-600 mt-0.5">
-                                {transaction.description}
+                                {transaction.description.length > 25
+                                  ? `${transaction.description.slice(0, 25)}..`
+                                  : transaction.description}
                               </p>
                             )}
                             <div className="text-xs text-gray-500 mt-1 flex items-center gap-1">

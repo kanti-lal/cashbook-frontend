@@ -28,4 +28,5 @@ export interface Transaction {
   description: string;
   date: string;
   category: "CUSTOMER" | "SUPPLIER";
+  paymentMode: "CASH" | "ONLINE";
 }

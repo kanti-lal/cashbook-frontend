@@ -2,7 +2,6 @@ import { useState } from "react";
 import { ChevronLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import ReportView from "../components/ReportView";
-import { getSuppliers, getTransactions } from "../utils/storage";
 import { useBusiness } from "../context/BusinessContext";
 
 type ViewMode = "transactions" | "report";
@@ -18,7 +17,7 @@ export default function AllSuppliersReportPage() {
   const [viewMode, setViewMode] = useState<ViewMode>("transactions");
   const [filterOption, setFilterOption] = useState<FilterOption>("newest");
   const [searchQuery, setSearchQuery] = useState("");
-  const { activeBusiness } = useBusiness();
+  const { activeBusiness, transactions, suppliers } = useBusiness();
 
   if (!activeBusiness) {
     return (
@@ -28,12 +27,11 @@ export default function AllSuppliersReportPage() {
     );
   }
 
-  const suppliers = getSuppliers(activeBusiness.id);
-  const allTransactions = getTransactions(activeBusiness.id);
+  // const suppliers = getSuppliers(activeBusiness.id);
 
-  // Get only supplier transactions for this business
-  const supplierTransactions = allTransactions.filter(
-    (t) => t.supplierId && t.businessId === activeBusiness.id
+  // Get only supplier transactions
+  const supplierTransactions = transactions.filter(
+    (t) => t.supplierId !== undefined && t.supplierId !== null
   );
 
   // Create a map of supplier names
@@ -43,13 +41,36 @@ export default function AllSuppliersReportPage() {
   }, {} as { [key: string]: string });
 
   // Calculate totals
-  const totalPaid = supplierTransactions
+  const totalPurchased = (supplierTransactions || [])
     .filter((t) => t.type === "IN")
     .reduce((sum, t) => sum + t.amount, 0);
 
-  const totalPurchased = supplierTransactions
+  const totalPaid = (supplierTransactions || [])
     .filter((t) => t.type === "OUT")
     .reduce((sum, t) => sum + t.amount, 0);
+
+  // Calculate supplier-wise summary for report view
+  const supplierSummary = suppliers.map((supplier) => {
+    const supplierTxns = supplierTransactions.filter(
+      (t) => t.supplierId === supplier.id
+    );
+
+    const purchased = supplierTxns
+      .filter((t) => t.type === "IN")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    const paid = supplierTxns
+      .filter((t) => t.type === "OUT")
+      .reduce((sum, t) => sum + t.amount, 0);
+
+    return {
+      id: supplier.id,
+      name: supplier.name,
+      purchased,
+      paid,
+      balance: purchased - paid,
+    };
+  });
 
   return (
     <div className="max-w-md mx-auto p-4 pb-20">
@@ -63,14 +84,14 @@ export default function AllSuppliersReportPage() {
       {/* Summary Cards */}
       <div className="grid grid-cols-2 gap-4 mb-6">
         <div className="bg-green-50 p-4 rounded-lg">
-          <p className="text-sm text-green-800">Total Paid</p>
-          <p className="text-lg font-semibold text-green-600">₹{totalPaid}</p>
-        </div>
-        <div className="bg-red-50 p-4 rounded-lg">
-          <p className="text-sm text-red-800">Total Purchased</p>
-          <p className="text-lg font-semibold text-red-600">
+          <p className="text-sm text-green-800">Total Purchased</p>
+          <p className="text-lg font-semibold text-green-600">
             ₹{totalPurchased}
           </p>
+        </div>
+        <div className="bg-red-50 p-4 rounded-lg">
+          <p className="text-sm text-red-800"> Total Paid</p>
+          <p className="text-lg font-semibold text-red-600">₹{totalPaid}</p>
         </div>
       </div>
 
@@ -98,12 +119,58 @@ export default function AllSuppliersReportPage() {
         </button>
       </div>
 
-      <ReportView
-        transactions={supplierTransactions}
-        entityNames={supplierNames}
-        searchQuery={searchQuery}
-        filterOption={filterOption}
-      />
+      {viewMode === "transactions" ? (
+        <ReportView
+          transactions={supplierTransactions}
+          entityNames={supplierNames}
+          searchQuery={searchQuery}
+          filterOption={filterOption}
+        />
+      ) : (
+        <div className="space-y-4">
+          {/* Report View */}
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-4 py-2 text-left text-sm text-gray-600">
+                    Supplier
+                  </th>
+                  <th className="px-4 py-2 text-right text-sm text-gray-600">
+                    Purchased
+                  </th>
+                  <th className="px-4 py-2 text-right text-sm text-gray-600">
+                    Paid
+                  </th>
+                  <th className="px-4 py-2 text-right text-sm text-gray-600">
+                    Balance
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {supplierSummary.map((summary) => (
+                  <tr key={summary.id} className="border-b">
+                    <td className="px-4 py-2">{summary.name}</td>
+                    <td className="px-4 py-2 text-right text-green-600">
+                      ₹{summary.purchased}
+                    </td>
+                    <td className="px-4 py-2 text-right text-red-600">
+                      ₹{summary.paid}
+                    </td>
+                    <td
+                      className={`px-4 py-2 text-right font-medium ${
+                        summary.balance >= 0 ? "text-green-600" : "text-red-600"
+                      }`}
+                    >
+                      ₹{summary.balance}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

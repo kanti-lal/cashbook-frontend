@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { updateSupplier } from "../utils/storage";
 import { AlertCircle } from "lucide-react";
 import SuccessAnimation from "./SuccessAnimation";
 import { Supplier } from "../types";
@@ -11,7 +10,7 @@ interface ValidationErrors {
 
 interface EditSupplierFormProps {
   supplier: Supplier;
-  onComplete: () => void;
+  onComplete: (supplierData: any) => void;
 }
 
 export default function EditSupplierForm({
@@ -47,13 +46,13 @@ export default function EditSupplierForm({
 
     if (!validateForm()) return;
 
-    updateSupplier({
-      ...supplier,
+    onComplete({
       name: name.trim(),
       phoneNumber: phoneNumber.trim(),
+      balance: supplier.balance,
     });
 
-    setShowSuccess(true);
+    // setShowSuccess(true);
   };
 
   const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,7 +62,7 @@ export default function EditSupplierForm({
 
   const handleSuccessComplete = () => {
     setShowSuccess(false);
-    onComplete();
+    // onComplete();
   };
 
   if (showSuccess) {

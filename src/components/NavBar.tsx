@@ -4,10 +4,24 @@ import { Home, BookOpen, Users, TrendingUp, Truck } from "lucide-react";
 export default function NavBar() {
   const location = useLocation();
 
-  const getNavItemClass = (path: string) =>
-    `flex flex-col items-center p-2 ${
-      location.pathname === path ? "text-purple-600" : "text-gray-600"
+  // const getNavItemClass = (path: string) =>
+  //   `flex flex-col items-center p-2 ${
+  //     location.pathname === path ? "text-purple-600" : "text-gray-600"
+  //   }`;
+
+  const getNavItemClass = (path: string) => {
+    // Exact match for home route
+    if (path === "/") {
+      return `flex flex-col items-center p-2 ${
+        location.pathname === "/" ? "text-purple-600" : "text-gray-600"
+      }`;
+    }
+
+    // For other routes, check if current path starts with the nav item path
+    return `flex flex-col items-center p-2 ${
+      location.pathname.startsWith(path) ? "text-purple-600" : "text-gray-600"
     }`;
+  };
 
   return (
     <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">

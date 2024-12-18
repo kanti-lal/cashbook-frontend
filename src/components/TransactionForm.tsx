@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Customer, Supplier, Transaction } from "../types";
-import { saveTransaction } from "../utils/storage";
 import SuccessAnimation from "./SuccessAnimation";
 import { useBusiness } from "../context/BusinessContext";
+import { Banknote, CreditCard } from "lucide-react";
 
 interface TransactionFormProps {
   type: "IN" | "OUT";
@@ -34,7 +34,11 @@ export default function TransactionForm({
   );
   const [description, setDescription] = useState("");
   const [showSuccess, setShowSuccess] = useState(false);
-  const { activeBusiness } = useBusiness();
+  const { activeBusiness, createTransaction } = useBusiness();
+  const [paymentMode, setPaymentMode] = useState<"CASH" | "ONLINE">("CASH");
+  const [transactionDate, setTransactionDate] = useState(
+    new Date().toISOString()
+  );
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,12 +60,12 @@ export default function TransactionForm({
       customerId: selectedCustomerId || customerId,
       supplierId: selectedSupplierId || supplierId,
       description,
-      date: new Date().toISOString(),
+      date: new Date(transactionDate).toISOString(), // Use selected date or default to current date
       category: hasSupplier ? "SUPPLIER" : "CUSTOMER",
       businessId: effectiveBusinessId,
+      paymentMode: paymentMode,
     };
-
-    saveTransaction(transaction);
+    createTransaction(transaction);
     setShowSuccess(true);
   };
 
@@ -131,14 +135,66 @@ export default function TransactionForm({
         <input
           type="number"
           id="amount"
+          placeholder="Enter amount"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
+          onWheel={(e: any) => {
+            e.target.blur();
+            e.preventDefault();
+          }}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-2 border"
           required
           min="0"
-          step="0.01"
+          step="0"
         />
       </div>
+      <div className="flex justify-between items-center space-x-1">
+        <span className="text-sm font-medium text-gray-700">Payment Mode</span>
+        <div className="flex bg-gray-100 rounded-full p-[3px] w-36">
+          <button
+            type="button"
+            onClick={() => setPaymentMode("CASH")}
+            className={`flex items-center justify-center w-1/2 py-1 text-[11px] font-medium rounded-full transition-colors duration-200 focus:outline-none ${
+              paymentMode === "CASH"
+                ? "bg-white text-purple-700 shadow-sm"
+                : "text-gray-700 hover:bg-gray-200"
+            }`}
+            aria-pressed={paymentMode === "CASH"}
+          >
+            <Banknote size={12} className="mr-1" />
+            Cash
+          </button>
+          <button
+            type="button"
+            onClick={() => setPaymentMode("ONLINE")}
+            className={`flex items-center justify-center w-1/2 py-1 text-[11px] font-medium rounded-full transition-colors duration-200 focus:outline-none ${
+              paymentMode === "ONLINE"
+                ? "bg-white text-purple-700 shadow-sm"
+                : "text-gray-700 hover:bg-gray-200"
+            }`}
+            aria-pressed={paymentMode === "ONLINE"}
+          >
+            <CreditCard size={12} className="mr-1" />
+            Online
+          </button>
+        </div>
+      </div>
+      <div>
+        <label
+          htmlFor="transaction-date"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Transaction Date
+        </label>
+        <input
+          type="date"
+          id="transaction-date"
+          value={transactionDate}
+          onChange={(e) => setTransactionDate(e.target.value)}
+          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-2 border"
+        />
+      </div>
+
       <div>
         <label
           htmlFor="description"
@@ -150,10 +206,12 @@ export default function TransactionForm({
           type="text"
           id="description"
           value={description}
+          placeholder="Enter description"
           onChange={(e) => setDescription(e.target.value)}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-2 border"
         />
       </div>
+
       <div className="flex gap-2">
         <button
           type="submit"

@@ -1,10 +1,10 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { Plus, ChevronRight, Search, FileText } from "lucide-react";
 import { Link } from "react-router-dom";
-import { getCustomers } from "../utils/storage";
 import AddCustomerForm from "../components/AddCustomerForm";
 import { useBusiness } from "../context/BusinessContext";
 import Modal from "../components/Modal";
+import { Customer } from "../types";
 
 type SortOption = "name" | "oldest" | "highest" | "lowest";
 
@@ -12,30 +12,29 @@ export default function CustomersPage() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("name");
-  const { activeBusiness, refreshCustomers } = useBusiness();
-  const [customers, setCustomers] = useState([]);
+  // const [customers, setCustomers] = useState([]);
+  const { activeBusiness, customers, createCustomer } = useBusiness();
 
-  // Fetch customers when needed
-  const fetchCustomers = () => {
-    if (activeBusiness) {
-      const fetchedCustomers = getCustomers(activeBusiness.id);
-      setCustomers(fetchedCustomers);
-    }
-  };
+  // // Calculate total balances
+  // const totalToGive = customers.reduce(
+  //   (sum, customer) =>
+  //     customer.balance < 0 ? sum + Math.abs(customer.balance) : sum,
+  //   0
+  // );
 
-  // Initial fetch and refresh when needed
-  useEffect(() => {
-    fetchCustomers();
-  }, [activeBusiness]);
+  // const totalToGet = customers.reduce(
+  //   (sum, customer) => (customer.balance > 0 ? sum + customer.balance : sum),
+  //   0
+  // );
 
   // Calculate total balances
-  const totalToGive = customers.reduce(
+  const totalToGet = customers.reduce(
     (sum, customer) =>
       customer.balance < 0 ? sum + Math.abs(customer.balance) : sum,
     0
   );
 
-  const totalToGet = customers.reduce(
+  const totalToGive = customers.reduce(
     (sum, customer) => (customer.balance > 0 ? sum + customer.balance : sum),
     0
   );
@@ -72,10 +71,19 @@ export default function CustomersPage() {
     return result;
   }, [customers, searchQuery, sortBy]);
 
-  const handleAddCustomer = () => {
-    fetchCustomers(); // Refresh the list
-    setShowAddModal(false);
-    refreshCustomers(); // Refresh global state
+  // const handleAddCustomer = () => {
+  //   fetchCustomers(); // Refresh the list
+  //   setShowAddModal(false);
+  //   refreshCustomers(); // Refresh global state
+  // };
+
+  const handleAddCustomer = async (customerData: Customer) => {
+    try {
+      await createCustomer(customerData);
+      setShowAddModal(false);
+    } catch (error) {
+      console.error("Error creating customer:", error);
+    }
   };
 
   if (!activeBusiness) {
@@ -118,13 +126,13 @@ export default function CustomersPage() {
 
       {/* Balance Summary */}
       <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="bg-red-50 p-4 rounded-lg">
-          <p className="text-sm text-red-800">You Will Give</p>
-          <p className="text-lg font-semibold text-red-600">₹{totalToGive}</p>
-        </div>
         <div className="bg-green-50 p-4 rounded-lg">
-          <p className="text-sm text-green-800">You Will Get</p>
-          <p className="text-lg font-semibold text-green-600">₹{totalToGet}</p>
+          <p className="text-sm text-green-800">You Will Give</p>
+          <p className="text-lg font-semibold text-green-600">₹{totalToGive}</p>
+        </div>
+        <div className="bg-red-50 p-4 rounded-lg">
+          <p className="text-sm text-red-800">You Will Get</p>
+          <p className="text-lg font-semibold text-red-600">₹{totalToGet}</p>
         </div>
       </div>
 
@@ -169,8 +177,8 @@ export default function CustomersPage() {
                   {customer.balance === 0
                     ? "No balance"
                     : customer.balance > 0
-                    ? "You will get"
-                    : "You will give"}
+                    ? "You will give"
+                    : "You will get"}
                 </p>
               </div>
               <div className="flex items-center gap-4">

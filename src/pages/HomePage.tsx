@@ -1,13 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Plus,
-  Store,
-  CheckCircle,
-  BookOpen,
-  UserPlus,
-  Contact,
-} from "lucide-react";
+import { Plus, Store, CheckCircle, BookOpen, Contact } from "lucide-react";
 import { useBusiness } from "../context/BusinessContext";
 import { Business } from "../api/types";
 
@@ -29,8 +22,7 @@ export default function HomePage() {
     if (!newBusinessName.trim()) return;
 
     try {
-      const newBusiness: any = await createBusiness({
-        id: "",
+      const newBusiness: Business = await createBusiness({
         name: newBusinessName.trim(),
         createdAt: new Date().toISOString(),
       });

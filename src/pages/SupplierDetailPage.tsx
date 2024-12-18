@@ -1,11 +1,13 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import { ArrowDownCircle, ArrowUpCircle, Pencil, Trash2 } from "lucide-react";
 import {
-  getSupplierById,
-  getSupplierTransactions,
-  deleteSupplier,
-} from "../utils/storage";
+  ArrowDownCircle,
+  ArrowUpCircle,
+  CircleArrowLeft,
+  Pencil,
+  Trash2,
+} from "lucide-react";
+
 import TransactionForm from "../components/TransactionForm";
 import EditSupplierForm from "../components/EditSupplierForm";
 import ReportView from "../components/ReportView";
@@ -24,8 +26,16 @@ export default function SupplierDetailPage() {
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [transactionType, setTransactionType] = useState<"IN" | "OUT">("IN");
   const [viewMode, setViewMode] = useState<ViewMode>("transactions");
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const { activeBusiness, refreshSuppliers } = useBusiness();
+
+  const {
+    activeBusiness,
+    // customers,
+    getSupplierById,
+    transactions,
+    updateSupplier,
+    deleteSupplier,
+    getSupplierTransactions,
+  } = useBusiness();
 
   if (!activeBusiness || !supplierId) {
     return (
@@ -35,15 +45,26 @@ export default function SupplierDetailPage() {
     );
   }
 
-  const supplier = getSupplierById(supplierId, activeBusiness.id);
-  const transactions = getSupplierTransactions(supplierId, activeBusiness.id);
+  const { data: supplier, isLoading: isLoadingCustomer } =
+    getSupplierById(supplierId);
+
+  const {
+    data: supplierTransactions,
+    isLoading: isLoadingSupplierTransactions,
+  } = getSupplierTransactions(supplierId);
 
   if (!supplier) {
-    return <div className="p-4">Supplier not found</div>;
+    return (
+      <div className="p-4 max-w-md mx-auto text-center">Supplier not found</div>
+    );
+  }
+
+  if (isLoadingCustomer || isLoadingSupplierTransactions) {
+    return <div className="p-4 max-w-md mx-auto text-center">loading...</div>;
   }
 
   // Group transactions by date
-  const groupedTransactions = transactions.reduce(
+  const groupedTransactions = (supplierTransactions || []).reduce(
     (groups: any[], transaction) => {
       const date = format(new Date(transaction.date), "yyyy-MM-dd");
       const existingGroup = groups.find((group) => group.date === date);
@@ -74,29 +95,44 @@ export default function SupplierDetailPage() {
   );
   groupedTransactions.forEach((group) => {
     group.transactions.sort(
-      (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+      (a: any, b: any) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime()
     );
   });
 
   const handleTransactionComplete = () => {
     setShowTransactionForm(false);
-    setRefreshTrigger((prev) => prev + 1);
   };
 
-  const handleEditComplete = () => {
-    setShowEditModal(false);
-    setRefreshTrigger((prev) => prev + 1);
-    refreshSuppliers();
+  const handleEditComplete = async (supplierData: any) => {
+    try {
+      await updateSupplier({
+        supplierId: supplierId,
+        data: {
+          name: supplierData?.name,
+          phoneNumber: supplierData?.phoneNumber,
+          balance: supplierData?.balance,
+        },
+      });
+      setShowEditModal(false);
+    } catch (error) {
+      console.error("Error updating supplier:", error);
+    }
   };
 
   const handleDelete = () => {
-    deleteSupplier(supplierId, activeBusiness.id);
-    refreshSuppliers();
+    deleteSupplier(supplierId, activeBusiness?.id);
     navigate("/suppliers");
   };
 
   return (
     <div className="max-w-md mx-auto p-4 pb-20">
+      <div className="flex items-center gap-2 mb-4">
+        <button onClick={() => navigate(-1)} className="">
+          <CircleArrowLeft size={24} className="text-gray-900" />
+        </button>
+        <h1 className="text-2xl font-bold ">Supplier Details page</h1>
+      </div>
       <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
         <div className="flex justify-between items-start mb-2">
           <div>
@@ -184,20 +220,19 @@ export default function SupplierDetailPage() {
         </div>
       </Modal>
 
-      {showTransactionForm && (
-        <div className="bg-white p-4 rounded-lg shadow mb-6">
-          <h2 className="text-lg font-semibold mb-4">
-            {transactionType === "IN" ? "New Purchase" : "Make Payment"}
-          </h2>
-          <TransactionForm
-            type={transactionType}
-            supplierId={supplier.id}
-            onComplete={handleTransactionComplete}
-            onCancel={() => setShowTransactionForm(false)}
-            businessId={activeBusiness.id}
-          />
-        </div>
-      )}
+      <Modal
+        isOpen={showTransactionForm}
+        onClose={() => setShowTransactionForm(false)}
+        title={transactionType === "IN" ? "New Purchase" : "Make Payment"}
+      >
+        <TransactionForm
+          type={transactionType}
+          supplierId={supplier.id}
+          onComplete={handleTransactionComplete}
+          onCancel={() => setShowTransactionForm(false)}
+          businessId={activeBusiness.id}
+        />
+      </Modal>
 
       {/* View Mode Tabs */}
       <div className="flex mb-4 border-b">
@@ -256,7 +291,6 @@ export default function SupplierDetailPage() {
                     key={transaction.id}
                     transaction={transaction}
                     entityName={supplier.name}
-                    onDelete={() => setRefreshTrigger((prev) => prev + 1)}
                   />
                 ))}
               </div>
@@ -271,7 +305,7 @@ export default function SupplierDetailPage() {
         </div>
       ) : (
         <ReportView
-          transactions={transactions}
+          transactions={supplierTransactions || []}
           entityNames={{ [supplier.id]: supplier.name }}
           searchQuery=""
           filterOption="newest"

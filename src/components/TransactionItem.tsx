@@ -1,60 +1,60 @@
-import { format } from 'date-fns';
-import { Pencil, Trash2 } from 'lucide-react';
-import { Transaction } from '../types';
-import { useState } from 'react';
-import Modal from './Modal';
+import { format } from "date-fns";
+import { Transaction } from "../types";
+import { useState } from "react";
+import Modal from "./Modal";
+import { useNavigate } from "react-router-dom";
 
 interface TransactionItemProps {
   transaction: Transaction;
   entityName: string;
-  onDelete: (transaction: Transaction) => void;
 }
 
-export default function TransactionItem({ transaction, entityName, onDelete }: TransactionItemProps) {
+export default function TransactionItem({
+  transaction,
+  entityName,
+}: TransactionItemProps) {
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const transactionDate = new Date(transaction.date);
+  const navigate = useNavigate();
 
   const handleDelete = () => {
-    onDelete(transaction);
     setShowDeleteConfirm(false);
+  };
+
+  const handleTransactionDetailClick = (transactionId: string) => {
+    navigate(`/transactions/${transactionId}`);
   };
 
   return (
     <>
-      <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100">
+      <div
+        className="bg-white p-3 rounded-lg shadow-sm border border-gray-100 hover:cursor-pointer"
+        onClick={() => handleTransactionDetailClick(transaction.id)}
+      >
         <div className="flex justify-between items-start">
           <div>
             <p className="font-medium text-gray-900">{entityName}</p>
             <p className="text-xs text-gray-500 mt-0.5">
-              {transaction.customerId ? 'Customer' : 'Supplier'}
+              {transaction.customerId ? "Customer" : "Supplier"}
             </p>
-            {transaction.description && (
-              <p className="text-sm text-gray-600 mt-0.5">{transaction.description}</p>
-            )}
+
+            {transaction.description.length > 25
+              ? `${transaction.description.slice(0, 25)}..`
+              : transaction.description}
             <div className="text-xs text-gray-500 mt-1 flex items-center gap-1">
-              <span>{format(transactionDate, 'h:mm a')}</span>
+              <span>{format(transactionDate, "h:mm a")}</span>
               <span className="text-gray-400">•</span>
-              <span>{format(transactionDate, 'dd MMM yyyy')}</span>
+              <span>{format(transactionDate, "dd MMM yyyy")}</span>
             </div>
           </div>
           <div className="flex items-start gap-2">
             <span
               className={`font-medium ${
-                transaction.type === 'IN'
-                  ? 'text-green-600'
-                  : 'text-red-600'
+                transaction.type === "IN" ? "text-green-600" : "text-red-600"
               }`}
             >
-              {transaction.type === 'IN' ? '+' : '-'}₹{transaction.amount}
+              {transaction.type === "IN" ? "+" : "-"}₹{transaction.amount}
             </span>
-            <div className="flex gap-1">
-              <button
-                onClick={() => setShowDeleteConfirm(true)}
-                className="p-1 hover:bg-red-50 rounded-full transition-colors"
-              >
-                <Trash2 size={16} className="text-red-600" />
-              </button>
-            </div>
           </div>
         </div>
       </div>
@@ -67,8 +67,9 @@ export default function TransactionItem({ transaction, entityName, onDelete }: T
       >
         <div className="space-y-4">
           <p className="text-gray-600">
-            Are you sure you want to delete this transaction? This will also update the {transaction.customerId ? 'customer' : 'supplier'} balance.
-            This action cannot be undone.
+            Are you sure you want to delete this transaction? This will also
+            update the {transaction.customerId ? "customer" : "supplier"}{" "}
+            balance. This action cannot be undone.
           </p>
           <div className="flex gap-2">
             <button
