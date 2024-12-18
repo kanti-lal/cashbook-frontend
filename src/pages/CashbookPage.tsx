@@ -171,7 +171,7 @@ export default function CashbookPage() {
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-gray-50 ">
       {/* Fixed top section */}
       <div className="flex-none bg-gray-50">
         <div className="max-w-md mx-auto p-4">

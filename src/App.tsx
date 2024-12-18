@@ -23,6 +23,9 @@ import "./index.css";
 import ProfilePage from "./pages/ProfilePage";
 import ProfileEditPage from "./pages/ProfileEditPage";
 import TransactionDetailPage from "./pages/TransactionDetailPage";
+import { ThemeProvider } from "./context/ThemeContext";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -50,120 +53,125 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 function App() {
   return (
-    <AuthProvider>
-      <BusinessProvider>
-        <Router>
-          <Routes>
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/register" element={<RegisterPage />} />
+    <ThemeProvider>
+      <AuthProvider>
+        <BusinessProvider>
+          <Router>
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/register" element={<RegisterPage />} />
 
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <HomePage />
-                </ProtectedRoute>
-              }
-            />
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <HomePage />
+                  </ProtectedRoute>
+                }
+              />
 
-            <Route
-              path="/cashbook"
-              element={
-                <ProtectedRoute>
-                  <CashbookPage />
-                </ProtectedRoute>
-              }
-            />
+              <Route
+                path="/cashbook"
+                element={
+                  <ProtectedRoute>
+                    <CashbookPage />
+                  </ProtectedRoute>
+                }
+              />
 
-            <Route
-              path="/transactions/:transactionId"
-              element={
-                <ProtectedRoute>
-                  <TransactionDetailPage />
-                </ProtectedRoute>
-              }
-            />
+              <Route
+                path="/transactions/:transactionId"
+                element={
+                  <ProtectedRoute>
+                    <TransactionDetailPage />
+                  </ProtectedRoute>
+                }
+              />
 
-            <Route
-              path="/customers"
-              element={
-                <ProtectedRoute>
-                  <CustomersPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/customers/:customerId"
-              element={
-                <ProtectedRoute>
-                  <CustomerDetailPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/customers/report"
-              element={
-                <ProtectedRoute>
-                  <AllCustomersReportPage />
-                </ProtectedRoute>
-              }
-            />
+              <Route
+                path="/customers"
+                element={
+                  <ProtectedRoute>
+                    <CustomersPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/customers/:customerId"
+                element={
+                  <ProtectedRoute>
+                    <CustomerDetailPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/customers/report"
+                element={
+                  <ProtectedRoute>
+                    <AllCustomersReportPage />
+                  </ProtectedRoute>
+                }
+              />
 
-            <Route
-              path="/suppliers"
-              element={
-                <ProtectedRoute>
-                  <SuppliersPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/suppliers/:supplierId"
-              element={
-                <ProtectedRoute>
-                  <SupplierDetailPage />
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/suppliers/report"
-              element={
-                <ProtectedRoute>
-                  <AllSuppliersReportPage />
-                </ProtectedRoute>
-              }
-            />
+              <Route
+                path="/suppliers"
+                element={
+                  <ProtectedRoute>
+                    <SuppliersPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/suppliers/:supplierId"
+                element={
+                  <ProtectedRoute>
+                    <SupplierDetailPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
+                path="/suppliers/report"
+                element={
+                  <ProtectedRoute>
+                    <AllSuppliersReportPage />
+                  </ProtectedRoute>
+                }
+              />
 
-            <Route
-              path="/profile"
-              element={
-                <ProtectedRoute>
-                  <ProfilePage />
-                </ProtectedRoute>
-              }
-            />
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <ProfilePage />
+                  </ProtectedRoute>
+                }
+              />
 
-            <Route
-              path="/profile/edit"
-              element={
-                <ProtectedRoute>
-                  <ProfileEditPage />
-                </ProtectedRoute>
-              }
-            />
+              <Route
+                path="/profile/edit"
+                element={
+                  <ProtectedRoute>
+                    <ProfileEditPage />
+                  </ProtectedRoute>
+                }
+              />
 
-            <Route
-              path="/analytics"
-              element={
-                <ProtectedRoute>
-                  <AnalyticsPage />
-                </ProtectedRoute>
-              }
-            />
-          </Routes>
-        </Router>
-      </BusinessProvider>
-    </AuthProvider>
+              <Route
+                path="/analytics"
+                element={
+                  <ProtectedRoute>
+                    <AnalyticsPage />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+              <Route path="/reset-password" element={<ResetPasswordPage />} />
+            </Routes>
+          </Router>
+        </BusinessProvider>
+      </AuthProvider>
+    </ThemeProvider>
   );
 }
 
