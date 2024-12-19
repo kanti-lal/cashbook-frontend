@@ -10,6 +10,8 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authApi, RegisterData, UpdateProfileData } from "../api/auth";
 
 const USER_KEY = "auth_user";
+const ACTIVE_BUSINESS_KEY = "activeBusiness";
+const AUTH_TOKEN_KEY = "auth_token";
 
 interface User {
   id: number;
@@ -132,7 +134,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     authApi.logout();
     localStorage.removeItem(USER_KEY);
-    queryClient.removeQueries({ queryKey: ["user"] });
+    localStorage.removeItem(ACTIVE_BUSINESS_KEY);
+    localStorage.removeItem(AUTH_TOKEN_KEY);
+    // queryClient.removeQueries({ queryKey: ["user"] });
+    queryClient.clear();
     setUser(null);
     setIsAuthenticated(false);
   };
