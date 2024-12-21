@@ -148,7 +148,8 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
     useQuery({
       queryKey: ["transactions", activeBusiness?.id],
       queryFn: () => transactionsApi.getAll(activeBusiness!.id),
-      staleTime: Infinity,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 30 * 60 * 1000, // 30 minutes
       enabled: !!activeBusiness?.id,
     });
 

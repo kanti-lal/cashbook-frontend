@@ -8,9 +8,10 @@ import {
 } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authApi, RegisterData, UpdateProfileData } from "../api/auth";
+import axios, { AxiosError, AxiosResponse } from "axios";
 
 const USER_KEY = "auth_user";
-const ACTIVE_BUSINESS_KEY = "activeBusiness";
+// const ACTIVE_BUSINESS_KEY = "activeBusiness";
 const AUTH_TOKEN_KEY = "auth_token";
 
 interface User {
@@ -55,6 +56,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const token = localStorage.getItem("auth_token");
     return !!token;
   });
+
+  // Add this function to check token validity
+  const checkAuthStatus = () => {
+    const token = localStorage.getItem(AUTH_TOKEN_KEY);
+    if (!token) {
+      setIsAuthenticated(false);
+      setUser(null);
+      queryClient.clear();
+      return false;
+    }
+    return true;
+  };
+
+  // Modify useEffect to use the check function
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
+  // Add interceptor to handle 401 errors
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      (response: AxiosResponse) => response,
+      (error: AxiosError) => {
+        if (error.response?.status === 401) {
+          logout();
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axios.interceptors.response.eject(interceptor);
+    };
+  }, []);
 
   const loginMutation = useMutation({
     mutationFn: authApi.login,
@@ -134,7 +169,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     authApi.logout();
     localStorage.removeItem(USER_KEY);
-    localStorage.removeItem(ACTIVE_BUSINESS_KEY);
+    // localStorage.removeItem(ACTIVE_BUSINESS_KEY);
     localStorage.removeItem(AUTH_TOKEN_KEY);
     // queryClient.removeQueries({ queryKey: ["user"] });
     queryClient.clear();

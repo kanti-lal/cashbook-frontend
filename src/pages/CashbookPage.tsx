@@ -37,7 +37,8 @@ export default function CashbookPage() {
   const [filterOption, setFilterOption] = useState<FilterOption>("newest");
 
   const navigate = useNavigate(); // Add navigation hook
-  const { activeBusiness, transactions, customers, suppliers } = useBusiness();
+  const { activeBusiness, transactions, customers, suppliers, isLoading } =
+    useBusiness();
 
   const handleTransactionDetailClick = (transactionId: string) => {
     navigate(`/transactions/${transactionId}`);
@@ -166,6 +167,14 @@ export default function CashbookPage() {
     return (
       <div className="max-w-md mx-auto p-4 text-center">
         <p className="text-gray-600">Please select a business first</p>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex flex-col h-screen bg-gray-50 items-center justify-center">
+        <p className="text-gray-600">Loading transactions...</p>
       </div>
     );
   }
