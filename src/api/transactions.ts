@@ -1,6 +1,8 @@
 // api/transactions.ts
+import { downloadPDF } from "../utils/pdfDownloader";
 import { apiClient } from "./client";
 import { Transaction } from "./types";
+import { format } from "date-fns";
 
 interface TransactionFilters {
   search?: string;
@@ -113,6 +115,102 @@ export const transactionsApi = {
       return data;
     } catch (error) {
       console.error("Error fetching business analytics:", error);
+      throw error;
+    }
+  },
+
+  exportTransactionsPDF: async (businessId: string) => {
+    try {
+      const response = await apiClient.get(
+        `/businesses/${businessId}/export-transactions`,
+        {
+          responseType: "arraybuffer",
+          headers: {
+            Accept: "application/pdf",
+          },
+        }
+      );
+
+      return downloadPDF(
+        response,
+        `transactions-${format(new Date(), "yyyy-MM-dd")}.pdf`
+      );
+    } catch (error) {
+      console.error("Export PDF Error:", error);
+      throw error;
+    }
+  },
+
+  exportCustomerLedgerPDF: async (businessId: string, customerId: string) => {
+    try {
+      const response = await apiClient.get(
+        `/businesses/${businessId}/export-customer-ledger/${customerId}`,
+        {
+          responseType: "blob",
+          headers: {
+            Accept: "application/pdf",
+          },
+        }
+      );
+
+      if (!response.data) {
+        throw new Error("Failed to generate PDF");
+      }
+
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `customer-ledger-${customerId}-${format(
+        new Date(),
+        "yyyy-MM-dd"
+      )}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+      throw error;
+    }
+  },
+
+  exportSupplierLedgerPDF: async (businessId: string, supplierId: string) => {
+    try {
+      const response = await apiClient.get(
+        `/businesses/${businessId}/export-supplier-ledger/${supplierId}`,
+        {
+          responseType: "blob",
+          headers: {
+            Accept: "application/pdf",
+          },
+        }
+      );
+
+      if (!response.data) {
+        throw new Error("Failed to generate PDF");
+      }
+
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `supplier-ledger-${supplierId}-${format(
+        new Date(),
+        "yyyy-MM-dd"
+      )}.pdf`;
+      document.body.appendChild(link);
+      link.click();
+
+      // Cleanup
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
       throw error;
     }
   },

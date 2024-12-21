@@ -7,6 +7,7 @@ import { suppliersApi } from "../api/suppliers";
 import { transactionsApi } from "../api/transactions";
 import { useAuth } from "./AuthContext";
 import { MonthlyAnalytics } from "../types";
+import { format } from "date-fns";
 
 // Local storage utility functions
 const ACTIVE_BUSINESS_KEY = "activeBusiness";
@@ -102,6 +103,10 @@ interface BusinessContextType {
     isLoading: boolean;
     error: Error | null;
   };
+
+  exportTransactionsPDF: () => Promise<void>;
+  exportCustomerLedgerPDF: (customerId: string) => Promise<void>;
+  exportSupplierLedgerPDF: (supplierId: string) => Promise<void>;
 }
 
 const BusinessContext = createContext<BusinessContextType | undefined>(
@@ -379,6 +384,32 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
     },
   });
 
+  const exportTransactionsPDFMutation = useMutation({
+    mutationFn: () => transactionsApi.exportTransactionsPDF(activeBusiness!.id),
+    onError: (error) => {
+      console.error("Failed to export transactions PDF:", error);
+      // You might want to show an error toast here
+    },
+  });
+
+  const exportCustomerLedgerPDFMutation = useMutation({
+    mutationFn: (customerId: string) =>
+      transactionsApi.exportCustomerLedgerPDF(activeBusiness!.id, customerId),
+    onError: (error) => {
+      console.error("Failed to export customer ledger PDF:", error);
+      // You might want to show an error toast here
+    },
+  });
+
+  const exportSupplierLedgerPDFMutation = useMutation({
+    mutationFn: (supplierId: string) =>
+      transactionsApi.exportSupplierLedgerPDF(activeBusiness!.id, supplierId),
+    onError: (error) => {
+      console.error("Failed to export supplier ledger PDF:", error);
+      // You might want to show an error toast here
+    },
+  });
+
   const refreshBusinesses = () => {
     refetchBusinesses();
   };
@@ -418,6 +449,24 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
         getSupplierTransactions,
         getBusinessAnalytics,
         refreshBusinesses,
+        exportTransactionsPDF: async () => {
+          if (!activeBusiness?.id) {
+            throw new Error("No active business selected");
+          }
+          await exportTransactionsPDFMutation.mutateAsync();
+        },
+        exportCustomerLedgerPDF: async (customerId: string) => {
+          if (!activeBusiness?.id) {
+            throw new Error("No active business selected");
+          }
+          await exportCustomerLedgerPDFMutation.mutateAsync(customerId);
+        },
+        exportSupplierLedgerPDF: async (supplierId: string) => {
+          if (!activeBusiness?.id) {
+            throw new Error("No active business selected");
+          }
+          await exportSupplierLedgerPDFMutation.mutateAsync(supplierId);
+        },
       }}
     >
       {children}
