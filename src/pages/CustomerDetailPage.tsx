@@ -5,6 +5,7 @@ import {
   ArrowDownCircle,
   ArrowUpCircle,
   CircleArrowLeft,
+  Download,
   Pencil,
   Trash2,
 } from "lucide-react";
@@ -35,6 +36,7 @@ export default function CustomerDetailPage() {
     updateCustomer,
     deleteCustomer,
     getCustomerTransactions,
+    exportCustomerLedgerPDF,
   } = useBusiness();
 
   const { data: customerDetails, isLoading: isLoadingCustomer } =
@@ -128,6 +130,14 @@ export default function CustomerDetailPage() {
   const handleDelete = () => {
     deleteCustomer(customerId, activeBusiness?.id);
     navigate("/customers");
+  };
+
+  const handleExportPDF = async () => {
+    try {
+      await exportCustomerLedgerPDF(customerId);
+    } catch (error) {
+      console.error("Failed to export PDF:", error);
+    }
   };
 
   return (
@@ -245,26 +255,35 @@ export default function CustomerDetailPage() {
       </Modal>
 
       {/* View Mode Tabs */}
-      <div className="flex mb-4 border-b">
+      <div className="flex justify-between mb-4 border-b">
+        <div>
+          <button
+            className={`py-2 px-4 ${
+              viewMode === "transactions"
+                ? "border-b-2 border-purple-500 text-purple-600"
+                : "text-gray-600"
+            }`}
+            onClick={() => setViewMode("transactions")}
+          >
+            Transactions
+          </button>
+          <button
+            className={`py-2 px-4 ${
+              viewMode === "report"
+                ? "border-b-2 border-purple-500 text-purple-600"
+                : "text-gray-600"
+            }`}
+            onClick={() => setViewMode("report")}
+          >
+            Report
+          </button>
+        </div>
         <button
-          className={`py-2 px-4 ${
-            viewMode === "transactions"
-              ? "border-b-2 border-purple-500 text-purple-600"
-              : "text-gray-600"
-          }`}
-          onClick={() => setViewMode("transactions")}
+          onClick={handleExportPDF}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg transition-colors"
         >
-          Transactions
-        </button>
-        <button
-          className={`py-2 px-4 ${
-            viewMode === "report"
-              ? "border-b-2 border-purple-500 text-purple-600"
-              : "text-gray-600"
-          }`}
-          onClick={() => setViewMode("report")}
-        >
-          Report
+          <Download className="w-4 h-4" />
+          <span>Export PDF</span>
         </button>
       </div>
 
