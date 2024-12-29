@@ -119,17 +119,19 @@ export default function SuppliersPage() {
       </Modal>
 
       {/* View Report Button */}
-      <div className="flex gap-2 mb-6">
-        <Link
-          to="/suppliers/report"
-          className="w-full mb-6 py-3 px-4 bg-purple-100 text-purple-700 rounded-lg flex items-center justify-center gap-2 hover:bg-purple-200 transition-colors"
-        >
-          <FileText size={20} />
-          View Supplier Report
-        </Link>
+      <div className="flex gap-2 mb-3 w-full">
+        <div className="w-full">
+          <Link
+            to="/suppliers/report"
+            className="w-full mb-3 py-3 px-4 flex-1 bg-purple-100 text-purple-700 rounded-lg flex items-center justify-center gap-2  hover:bg-purple-200 transition-colors text-sm  md:text-[16px]"
+          >
+            <FileText size={20} />
+            View Supplier Report
+          </Link>
+        </div>
         <button
           onClick={() => exportAllSuppliersLedgerPDF()}
-          className="flex items-center gap-2 px-4 py-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+          className="py-3 w-[210px] px-4 mb-3 bg-purple-100 text-purple-700 rounded-lg flex items-center gap-2 justify-center  hover:bg-purple-200 transition-colors text-sm  md:text-[16px]"
         >
           <Download size={20} />
           Export PDF
