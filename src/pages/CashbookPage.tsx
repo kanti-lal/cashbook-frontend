@@ -362,7 +362,7 @@ export default function CashbookPage() {
 
       {/* Scrollable transactions section */}
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-md mx-auto p-4 space-y-3 mb-16">
+        <div className="max-w-md mx-auto p-4 space-y-3">
           {groupedTransactions.length === 0 ? (
             <p className="text-gray-500 text-center py-4">
               No transactions found

@@ -214,4 +214,48 @@ export const transactionsApi = {
       throw error;
     }
   },
+
+  exportAllCustomersLedgerPDF: async (businessId: string) => {
+    try {
+      const response = await apiClient.get(
+        `/businesses/${businessId}/export-all-customers-ledger`,
+        {
+          responseType: "blob",
+          headers: {
+            Accept: "application/pdf",
+          },
+        }
+      );
+
+      return downloadPDF(
+        response,
+        `all-customers-ledger-${format(new Date(), "yyyy-MM-dd")}.pdf`
+      );
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+      throw error;
+    }
+  },
+
+  exportAllSuppliersLedgerPDF: async (businessId: string) => {
+    try {
+      const response = await apiClient.get(
+        `/businesses/${businessId}/export-all-suppliers-ledger`,
+        {
+          responseType: "blob",
+          headers: {
+            Accept: "application/pdf",
+          },
+        }
+      );
+
+      return downloadPDF(
+        response,
+        `all-suppliers-ledger-${format(new Date(), "yyyy-MM-dd")}.pdf`
+      );
+    } catch (error) {
+      console.error("Error downloading PDF:", error);
+      throw error;
+    }
+  },
 };

@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Plus, ChevronRight, Search, FileText } from "lucide-react";
+import { Plus, ChevronRight, Search, FileText, Download } from "lucide-react";
 import { Link } from "react-router-dom";
 import AddCustomerForm from "../components/AddCustomerForm";
 import { useBusiness } from "../context/BusinessContext";
@@ -13,7 +13,12 @@ export default function CustomersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("name");
   // const [customers, setCustomers] = useState([]);
-  const { activeBusiness, customers, createCustomer } = useBusiness();
+  const {
+    activeBusiness,
+    customers,
+    createCustomer,
+    exportAllCustomersLedgerPDF,
+  } = useBusiness();
 
   // // Calculate total balances
   // const totalToGive = customers.reduce(
@@ -116,13 +121,22 @@ export default function CustomersPage() {
       </Modal>
 
       {/* View Report Button */}
-      <Link
-        to="/customers/report"
-        className="w-full mb-6 py-3 px-4 bg-purple-100 text-purple-700 rounded-lg flex items-center justify-center gap-2 hover:bg-purple-200 transition-colors"
-      >
-        <FileText size={20} />
-        View Customer Report
-      </Link>
+      <div className="flex gap-2 mb-6">
+        <Link
+          to="/customers/report"
+          className="flex-1 py-3 px-4 bg-purple-100 text-purple-700 rounded-lg flex items-center justify-center gap-2 hover:bg-purple-200 transition-colors"
+        >
+          <FileText size={20} />
+          View Customer Report
+        </Link>
+        <button
+          onClick={() => exportAllCustomersLedgerPDF()}
+          className="py-3 px-4 bg-purple-100 text-purple-700 rounded-lg flex items-center justify-center gap-2 hover:bg-purple-200 transition-colors"
+        >
+          <Download size={20} />
+          Export All
+        </button>
+      </div>
 
       {/* Balance Summary */}
       <div className="grid grid-cols-2 gap-4 mb-6">

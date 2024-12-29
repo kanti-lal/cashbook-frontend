@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Plus, ChevronRight, Search, FileText } from "lucide-react";
+import { Plus, ChevronRight, Search, FileText, Download } from "lucide-react";
 import { Link } from "react-router-dom";
 import AddSupplierForm from "../components/AddSupplierForm";
 import { useBusiness } from "../context/BusinessContext";
@@ -13,7 +13,12 @@ export default function SuppliersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("name");
   // const [suppliers, setSuppliers] = useState([]);
-  const { activeBusiness, suppliers, createSupplier } = useBusiness();
+  const {
+    activeBusiness,
+    suppliers,
+    createSupplier,
+    exportAllSuppliersLedgerPDF,
+  } = useBusiness();
 
   // // Fetch suppliers when needed
   // const fetchSuppliers = () => {
@@ -114,13 +119,22 @@ export default function SuppliersPage() {
       </Modal>
 
       {/* View Report Button */}
-      <Link
-        to="/suppliers/report"
-        className="w-full mb-6 py-3 px-4 bg-purple-100 text-purple-700 rounded-lg flex items-center justify-center gap-2 hover:bg-purple-200 transition-colors"
-      >
-        <FileText size={20} />
-        View Supplier Report
-      </Link>
+      <div className="flex gap-2 mb-6">
+        <Link
+          to="/suppliers/report"
+          className="w-full mb-6 py-3 px-4 bg-purple-100 text-purple-700 rounded-lg flex items-center justify-center gap-2 hover:bg-purple-200 transition-colors"
+        >
+          <FileText size={20} />
+          View Supplier Report
+        </Link>
+        <button
+          onClick={() => exportAllSuppliersLedgerPDF()}
+          className="flex items-center gap-2 px-4 py-2 text-purple-600 hover:bg-purple-50 rounded-lg transition-colors"
+        >
+          <Download size={20} />
+          Export PDF
+        </button>
+      </div>
 
       {/* Balance Summary */}
       <div className="grid grid-cols-2 gap-4 mb-6">

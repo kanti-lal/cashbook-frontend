@@ -107,6 +107,8 @@ interface BusinessContextType {
   exportTransactionsPDF: () => Promise<void>;
   exportCustomerLedgerPDF: (customerId: string) => Promise<void>;
   exportSupplierLedgerPDF: (supplierId: string) => Promise<void>;
+  exportAllCustomersLedgerPDF: () => Promise<void>;
+  exportAllSuppliersLedgerPDF: () => Promise<void>;
 }
 
 const BusinessContext = createContext<BusinessContextType | undefined>(
@@ -410,6 +412,22 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
     },
   });
 
+  const exportAllCustomersLedgerPDFMutation = useMutation({
+    mutationFn: () =>
+      transactionsApi.exportAllCustomersLedgerPDF(activeBusiness!.id),
+    onError: (error) => {
+      console.error("Failed to export all customers ledger PDF:", error);
+    },
+  });
+
+  const exportAllSuppliersLedgerPDFMutation = useMutation({
+    mutationFn: () =>
+      transactionsApi.exportAllSuppliersLedgerPDF(activeBusiness!.id),
+    onError: (error) => {
+      console.error("Failed to export all suppliers ledger PDF:", error);
+    },
+  });
+
   const refreshBusinesses = () => {
     refetchBusinesses();
   };
@@ -466,6 +484,18 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
             throw new Error("No active business selected");
           }
           await exportSupplierLedgerPDFMutation.mutateAsync(supplierId);
+        },
+        exportAllCustomersLedgerPDF: async () => {
+          if (!activeBusiness?.id) {
+            throw new Error("No active business selected");
+          }
+          await exportAllCustomersLedgerPDFMutation.mutateAsync();
+        },
+        exportAllSuppliersLedgerPDF: async () => {
+          if (!activeBusiness?.id) {
+            throw new Error("No active business selected");
+          }
+          await exportAllSuppliersLedgerPDFMutation.mutateAsync();
         },
       }}
     >
