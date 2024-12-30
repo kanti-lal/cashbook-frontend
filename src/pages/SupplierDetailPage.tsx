@@ -7,6 +7,7 @@ import {
   Pencil,
   Trash2,
   Download,
+  LoaderCircle,
 } from "lucide-react";
 
 import TransactionForm from "../components/TransactionForm";
@@ -37,6 +38,7 @@ export default function SupplierDetailPage() {
     deleteSupplier,
     getSupplierTransactions,
     exportSupplierLedgerPDF,
+    isExportingSupplierLedgerPDF,
   } = useBusiness();
 
   if (!activeBusiness || !supplierId) {
@@ -270,10 +272,19 @@ export default function SupplierDetailPage() {
         </div>
         <button
           onClick={handleExportPDF}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg transition-colors"
+          disabled={isExportingSupplierLedgerPDF}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-purple-600 hover:text-purple-700 hover:bg-purple-200 bg-purple-100 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed h-[38px]"
         >
-          <Download className="w-4 h-4" />
-          <span>Export PDF</span>
+          {isExportingSupplierLedgerPDF ? (
+            <span className="inline-block animate-spin">
+              <LoaderCircle className="w-4 h-4" />
+            </span>
+          ) : (
+            <Download className="w-4 h-4" />
+          )}
+          <span>
+            {isExportingSupplierLedgerPDF ? "Exporting..." : "Export PDF"}
+          </span>
         </button>
       </div>
 

@@ -1,5 +1,12 @@
 import { useState, useMemo } from "react";
-import { Plus, ChevronRight, Search, FileText, Download } from "lucide-react";
+import {
+  Plus,
+  ChevronRight,
+  Search,
+  FileText,
+  Download,
+  LoaderCircle,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import AddCustomerForm from "../components/AddCustomerForm";
 import { useBusiness } from "../context/BusinessContext";
@@ -18,6 +25,7 @@ export default function CustomersPage() {
     customers,
     createCustomer,
     exportAllCustomersLedgerPDF,
+    isExportingAllCustomersLedgerPDF,
   } = useBusiness();
 
   // // Calculate total balances
@@ -133,10 +141,19 @@ export default function CustomersPage() {
         </div>
         <button
           onClick={() => exportAllCustomersLedgerPDF()}
-          className="py-3 w-[210px] px-4 mb-3 bg-purple-100 text-purple-700 rounded-lg flex items-center gap-2 justify-center  hover:bg-purple-200 transition-colors text-sm  md:text-[16px]"
+          disabled={isExportingAllCustomersLedgerPDF}
+          className="py-3 w-[210px] px-4 mb-3 bg-purple-100 text-purple-700 rounded-lg flex items-center gap-2 justify-center hover:bg-purple-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-[16px]"
         >
-          <Download size={20} />
-          Export PDF
+          {isExportingAllCustomersLedgerPDF ? (
+            <span className="inline-block animate-spin">
+              <LoaderCircle className="w-5 h-5" />
+            </span>
+          ) : (
+            <Download size={20} />
+          )}
+          <span>
+            {isExportingAllCustomersLedgerPDF ? "Exporting..." : "Export PDF"}
+          </span>
         </button>
       </div>
 

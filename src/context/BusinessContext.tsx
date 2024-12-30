@@ -109,6 +109,12 @@ interface BusinessContextType {
   exportSupplierLedgerPDF: (supplierId: string) => Promise<void>;
   exportAllCustomersLedgerPDF: () => Promise<void>;
   exportAllSuppliersLedgerPDF: () => Promise<void>;
+
+  isExportingTransactionsPDF: boolean;
+  isExportingCustomerLedgerPDF: boolean;
+  isExportingSupplierLedgerPDF: boolean;
+  isExportingAllCustomersLedgerPDF: boolean;
+  isExportingAllSuppliersLedgerPDF: boolean;
 }
 
 const BusinessContext = createContext<BusinessContextType | undefined>(
@@ -390,7 +396,6 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
     mutationFn: () => transactionsApi.exportTransactionsPDF(activeBusiness!.id),
     onError: (error) => {
       console.error("Failed to export transactions PDF:", error);
-      // You might want to show an error toast here
     },
   });
 
@@ -399,7 +404,6 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
       transactionsApi.exportCustomerLedgerPDF(activeBusiness!.id, customerId),
     onError: (error) => {
       console.error("Failed to export customer ledger PDF:", error);
-      // You might want to show an error toast here
     },
   });
 
@@ -408,7 +412,6 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
       transactionsApi.exportSupplierLedgerPDF(activeBusiness!.id, supplierId),
     onError: (error) => {
       console.error("Failed to export supplier ledger PDF:", error);
-      // You might want to show an error toast here
     },
   });
 
@@ -497,6 +500,13 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
           }
           await exportAllSuppliersLedgerPDFMutation.mutateAsync();
         },
+        isExportingTransactionsPDF: exportTransactionsPDFMutation.isPending,
+        isExportingCustomerLedgerPDF: exportCustomerLedgerPDFMutation.isPending,
+        isExportingSupplierLedgerPDF: exportSupplierLedgerPDFMutation.isPending,
+        isExportingAllCustomersLedgerPDF:
+          exportAllCustomersLedgerPDFMutation.isPending,
+        isExportingAllSuppliersLedgerPDF:
+          exportAllSuppliersLedgerPDFMutation.isPending,
       }}
     >
       {children}
