@@ -84,21 +84,28 @@ export const authApi = {
   },
 
   // Request Password Reset
-  forgotPassword: async (data: ForgotPasswordData) => {
-    const response = await apiClient.post<MessageResponse>(
-      "/auth/forgot-password",
-      data
-    );
-    return response.data;
+  forgotPassword: async (email: string) => {
+    try {
+      const { data } = await apiClient.post("/auth/forgot-password", { email });
+      return data;
+    } catch (error) {
+      console.error("Error sending reset password email:", error);
+      throw error;
+    }
   },
 
   // Reset Password
-  resetPassword: async (data: ResetPasswordData) => {
-    const response = await apiClient.post<MessageResponse>(
-      "/auth/reset-password",
-      data
-    );
-    return response.data;
+  resetPassword: async (token: string, password: string) => {
+    try {
+      const { data } = await apiClient.post("/auth/reset-password", {
+        token,
+        password,
+      });
+      return data;
+    } catch (error) {
+      console.error("Error resetting password:", error);
+      throw error;
+    }
   },
 
   // Update Password

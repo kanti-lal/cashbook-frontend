@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { AlertCircle, Key, Eye, EyeOff } from "lucide-react";
-import axios from "axios";
+import { authApi } from "../api/auth";
 
 export default function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
@@ -19,10 +19,10 @@ export default function ResetPasswordPage() {
     setLoading(true);
 
     try {
-      await axios.post("/api/auth/reset-password", {
-        token,
-        password,
-      });
+      if (!token) {
+        throw new Error("Reset token is missing");
+      }
+      await authApi.resetPassword(token, password);
       navigate("/login", {
         state: { message: "Password reset successful. Please login." },
       });

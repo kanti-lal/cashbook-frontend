@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { AlertCircle, Mail } from "lucide-react";
-import axios from "axios";
+import { authApi } from "../api/auth";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -15,7 +15,7 @@ export default function ForgotPasswordPage() {
     setLoading(true);
 
     try {
-      await axios.post("/api/auth/forgot-password", { email });
+      await authApi.forgotPassword(email);
       setSuccess(true);
     } catch (err: any) {
       setError(err?.response?.data?.message || "Failed to send reset email");
