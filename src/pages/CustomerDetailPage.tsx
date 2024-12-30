@@ -280,7 +280,7 @@ export default function CustomerDetailPage() {
         </div>
         <button
           onClick={handleExportPDF}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg transition-colors"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-purple-600 bg-purple-100 hover:text-purple-700 hover:bg-purple-200 rounded-lg transition-colors h-[38px]"
         >
           <Download className="w-4 h-4" />
           <span>Export PDF</span>
