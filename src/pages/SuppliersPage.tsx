@@ -1,5 +1,12 @@
 import { useState, useMemo } from "react";
-import { Plus, ChevronRight, Search, FileText } from "lucide-react";
+import {
+  Plus,
+  ChevronRight,
+  Search,
+  FileText,
+  Download,
+  LoaderCircle,
+} from "lucide-react";
 import { Link } from "react-router-dom";
 import AddSupplierForm from "../components/AddSupplierForm";
 import { useBusiness } from "../context/BusinessContext";
@@ -13,7 +20,13 @@ export default function SuppliersPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("name");
   // const [suppliers, setSuppliers] = useState([]);
-  const { activeBusiness, suppliers, createSupplier } = useBusiness();
+  const {
+    activeBusiness,
+    suppliers,
+    createSupplier,
+    exportAllSuppliersLedgerPDF,
+    isExportingAllSuppliersLedgerPDF,
+  } = useBusiness();
 
   // // Fetch suppliers when needed
   // const fetchSuppliers = () => {
@@ -114,13 +127,33 @@ export default function SuppliersPage() {
       </Modal>
 
       {/* View Report Button */}
-      <Link
-        to="/suppliers/report"
-        className="w-full mb-6 py-3 px-4 bg-purple-100 text-purple-700 rounded-lg flex items-center justify-center gap-2 hover:bg-purple-200 transition-colors"
-      >
-        <FileText size={20} />
-        View Supplier Report
-      </Link>
+      <div className="flex gap-2 mb-3 w-full">
+        <div className="w-full">
+          <Link
+            to="/suppliers/report"
+            className="w-full mb-3 py-3 px-4 flex-1 bg-purple-100 text-purple-700 rounded-lg flex items-center justify-center gap-2  hover:bg-purple-200 transition-colors text-sm  md:text-[16px]"
+          >
+            <FileText size={20} />
+            View Supplier Report
+          </Link>
+        </div>
+        <button
+          onClick={() => exportAllSuppliersLedgerPDF()}
+          disabled={isExportingAllSuppliersLedgerPDF}
+          className="py-3 w-[210px] px-4 mb-3 bg-purple-100 text-purple-700 rounded-lg flex items-center gap-2 justify-center hover:bg-purple-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-[16px]"
+        >
+          {isExportingAllSuppliersLedgerPDF ? (
+            <span className="inline-block animate-spin">
+              <LoaderCircle className="w-5 h-5" />
+            </span>
+          ) : (
+            <Download size={20} />
+          )}
+          <span>
+            {isExportingAllSuppliersLedgerPDF ? "Exporting..." : "Export PDF"}
+          </span>
+        </button>
+      </div>
 
       {/* Balance Summary */}
       <div className="grid grid-cols-2 gap-4 mb-6">

@@ -5,6 +5,8 @@ import {
   ArrowDownCircle,
   ArrowUpCircle,
   CircleArrowLeft,
+  Download,
+  LoaderCircle,
   Pencil,
   Trash2,
 } from "lucide-react";
@@ -35,6 +37,8 @@ export default function CustomerDetailPage() {
     updateCustomer,
     deleteCustomer,
     getCustomerTransactions,
+    exportCustomerLedgerPDF,
+    isExportingCustomerLedgerPDF,
   } = useBusiness();
 
   const { data: customerDetails, isLoading: isLoadingCustomer } =
@@ -128,6 +132,14 @@ export default function CustomerDetailPage() {
   const handleDelete = () => {
     deleteCustomer(customerId, activeBusiness?.id);
     navigate("/customers");
+  };
+
+  const handleExportPDF = async () => {
+    try {
+      await exportCustomerLedgerPDF(customerId);
+    } catch (error) {
+      console.error("Failed to export PDF:", error);
+    }
   };
 
   return (
@@ -245,26 +257,44 @@ export default function CustomerDetailPage() {
       </Modal>
 
       {/* View Mode Tabs */}
-      <div className="flex mb-4 border-b">
+      <div className="flex justify-between mb-4 border-b">
+        <div>
+          <button
+            className={`py-2 px-4 ${
+              viewMode === "transactions"
+                ? "border-b-2 border-purple-500 text-purple-600"
+                : "text-gray-600"
+            }`}
+            onClick={() => setViewMode("transactions")}
+          >
+            Transactions
+          </button>
+          <button
+            className={`py-2 px-4 ${
+              viewMode === "report"
+                ? "border-b-2 border-purple-500 text-purple-600"
+                : "text-gray-600"
+            }`}
+            onClick={() => setViewMode("report")}
+          >
+            Report
+          </button>
+        </div>
         <button
-          className={`py-2 px-4 ${
-            viewMode === "transactions"
-              ? "border-b-2 border-purple-500 text-purple-600"
-              : "text-gray-600"
-          }`}
-          onClick={() => setViewMode("transactions")}
+          onClick={handleExportPDF}
+          disabled={isExportingCustomerLedgerPDF}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-purple-600 hover:text-purple-700 bg-purple-100 hover:bg-purple-200 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed h-[38px]"
         >
-          Transactions
-        </button>
-        <button
-          className={`py-2 px-4 ${
-            viewMode === "report"
-              ? "border-b-2 border-purple-500 text-purple-600"
-              : "text-gray-600"
-          }`}
-          onClick={() => setViewMode("report")}
-        >
-          Report
+          {isExportingCustomerLedgerPDF ? (
+            <span className="inline-block animate-spin">
+              <LoaderCircle className="w-4 h-4" />
+            </span>
+          ) : (
+            <Download className="w-4 h-4" />
+          )}
+          <span>
+            {isExportingCustomerLedgerPDF ? "Exporting..." : "Export PDF"}
+          </span>
         </button>
       </div>
 

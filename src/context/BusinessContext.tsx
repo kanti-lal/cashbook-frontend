@@ -7,6 +7,7 @@ import { suppliersApi } from "../api/suppliers";
 import { transactionsApi } from "../api/transactions";
 import { useAuth } from "./AuthContext";
 import { MonthlyAnalytics } from "../types";
+import { format } from "date-fns";
 
 // Local storage utility functions
 const ACTIVE_BUSINESS_KEY = "activeBusiness";
@@ -102,6 +103,18 @@ interface BusinessContextType {
     isLoading: boolean;
     error: Error | null;
   };
+
+  exportTransactionsPDF: () => Promise<void>;
+  exportCustomerLedgerPDF: (customerId: string) => Promise<void>;
+  exportSupplierLedgerPDF: (supplierId: string) => Promise<void>;
+  exportAllCustomersLedgerPDF: () => Promise<void>;
+  exportAllSuppliersLedgerPDF: () => Promise<void>;
+
+  isExportingTransactionsPDF: boolean;
+  isExportingCustomerLedgerPDF: boolean;
+  isExportingSupplierLedgerPDF: boolean;
+  isExportingAllCustomersLedgerPDF: boolean;
+  isExportingAllSuppliersLedgerPDF: boolean;
 }
 
 const BusinessContext = createContext<BusinessContextType | undefined>(
@@ -148,7 +161,8 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
     useQuery({
       queryKey: ["transactions", activeBusiness?.id],
       queryFn: () => transactionsApi.getAll(activeBusiness!.id),
-      staleTime: Infinity,
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 30 * 60 * 1000, // 30 minutes
       enabled: !!activeBusiness?.id,
     });
 
@@ -378,6 +392,45 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
     },
   });
 
+  const exportTransactionsPDFMutation = useMutation({
+    mutationFn: () => transactionsApi.exportTransactionsPDF(activeBusiness!.id),
+    onError: (error) => {
+      console.error("Failed to export transactions PDF:", error);
+    },
+  });
+
+  const exportCustomerLedgerPDFMutation = useMutation({
+    mutationFn: (customerId: string) =>
+      transactionsApi.exportCustomerLedgerPDF(activeBusiness!.id, customerId),
+    onError: (error) => {
+      console.error("Failed to export customer ledger PDF:", error);
+    },
+  });
+
+  const exportSupplierLedgerPDFMutation = useMutation({
+    mutationFn: (supplierId: string) =>
+      transactionsApi.exportSupplierLedgerPDF(activeBusiness!.id, supplierId),
+    onError: (error) => {
+      console.error("Failed to export supplier ledger PDF:", error);
+    },
+  });
+
+  const exportAllCustomersLedgerPDFMutation = useMutation({
+    mutationFn: () =>
+      transactionsApi.exportAllCustomersLedgerPDF(activeBusiness!.id),
+    onError: (error) => {
+      console.error("Failed to export all customers ledger PDF:", error);
+    },
+  });
+
+  const exportAllSuppliersLedgerPDFMutation = useMutation({
+    mutationFn: () =>
+      transactionsApi.exportAllSuppliersLedgerPDF(activeBusiness!.id),
+    onError: (error) => {
+      console.error("Failed to export all suppliers ledger PDF:", error);
+    },
+  });
+
   const refreshBusinesses = () => {
     refetchBusinesses();
   };
@@ -417,6 +470,43 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
         getSupplierTransactions,
         getBusinessAnalytics,
         refreshBusinesses,
+        exportTransactionsPDF: async () => {
+          if (!activeBusiness?.id) {
+            throw new Error("No active business selected");
+          }
+          await exportTransactionsPDFMutation.mutateAsync();
+        },
+        exportCustomerLedgerPDF: async (customerId: string) => {
+          if (!activeBusiness?.id) {
+            throw new Error("No active business selected");
+          }
+          await exportCustomerLedgerPDFMutation.mutateAsync(customerId);
+        },
+        exportSupplierLedgerPDF: async (supplierId: string) => {
+          if (!activeBusiness?.id) {
+            throw new Error("No active business selected");
+          }
+          await exportSupplierLedgerPDFMutation.mutateAsync(supplierId);
+        },
+        exportAllCustomersLedgerPDF: async () => {
+          if (!activeBusiness?.id) {
+            throw new Error("No active business selected");
+          }
+          await exportAllCustomersLedgerPDFMutation.mutateAsync();
+        },
+        exportAllSuppliersLedgerPDF: async () => {
+          if (!activeBusiness?.id) {
+            throw new Error("No active business selected");
+          }
+          await exportAllSuppliersLedgerPDFMutation.mutateAsync();
+        },
+        isExportingTransactionsPDF: exportTransactionsPDFMutation.isPending,
+        isExportingCustomerLedgerPDF: exportCustomerLedgerPDFMutation.isPending,
+        isExportingSupplierLedgerPDF: exportSupplierLedgerPDFMutation.isPending,
+        isExportingAllCustomersLedgerPDF:
+          exportAllCustomersLedgerPDFMutation.isPending,
+        isExportingAllSuppliersLedgerPDF:
+          exportAllSuppliersLedgerPDFMutation.isPending,
       }}
     >
       {children}

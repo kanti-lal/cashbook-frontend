@@ -6,6 +6,8 @@ import {
   Wallet,
   TrendingUp,
   Search,
+  Download,
+  LoaderCircle,
 } from "lucide-react";
 import TransactionForm from "../components/TransactionForm";
 import { Transaction } from "../types";
@@ -37,8 +39,15 @@ export default function CashbookPage() {
   const [filterOption, setFilterOption] = useState<FilterOption>("newest");
 
   const navigate = useNavigate(); // Add navigation hook
-  // Replace storage utilities with BusinessContext
-  const { activeBusiness, transactions, customers, suppliers } = useBusiness();
+  const {
+    activeBusiness,
+    transactions,
+    customers,
+    suppliers,
+    isLoading,
+    exportTransactionsPDF,
+    isExportingTransactionsPDF,
+  } = useBusiness();
 
   const handleTransactionDetailClick = (transactionId: string) => {
     navigate(`/transactions/${transactionId}`);
@@ -163,6 +172,15 @@ export default function CashbookPage() {
     setIsTransactionModalOpen(false);
   };
 
+  const handleExportPDF = async () => {
+    try {
+      await exportTransactionsPDF();
+    } catch (error) {
+      // Handle error (you might want to show a toast or alert)
+      console.error("Failed to export PDF:", error);
+    }
+  };
+
   if (!activeBusiness) {
     return (
       <div className="max-w-md mx-auto p-4 text-center">
@@ -171,8 +189,16 @@ export default function CashbookPage() {
     );
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col h-screen bg-gray-50 items-center justify-center">
+        <p className="text-gray-600">Loading transactions...</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-gray-50 ">
       {/* Fixed top section */}
       <div className="flex-none bg-gray-50">
         <div className="max-w-md mx-auto p-4">
@@ -323,13 +349,31 @@ export default function CashbookPage() {
       {/* Sticky header */}
       <div className="flex-none bg-gray-50 border-b border-gray-200 sticky top-0 z-10">
         <div className="max-w-md mx-auto px-4 py-1">
-          <h2 className="text-lg font-semibold">Recent Transactions</h2>
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-semibold">Recent Transactions</h2>
+            <button
+              onClick={handleExportPDF}
+              disabled={isExportingTransactionsPDF}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-purple-600 bg-purple-100 hover:text-purple-700 hover:bg-purple-200 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isExportingTransactionsPDF ? (
+                <span className="inline-block animate-spin">
+                  <LoaderCircle className="w-4 h-4" />
+                </span>
+              ) : (
+                <Download className="w-4 h-4" />
+              )}
+              <span>
+                {isExportingTransactionsPDF ? "Exporting..." : "Export PDF"}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Scrollable transactions section */}
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-md mx-auto p-4 space-y-3 mb-16">
+        <div className="max-w-md mx-auto p-4 space-y-3">
           {groupedTransactions.length === 0 ? (
             <p className="text-gray-500 text-center py-4">
               No transactions found
