@@ -102,8 +102,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const registerMutation = useMutation({
     mutationFn: authApi.register,
-    onSuccess: (user) => {
-      setUser(user);
+    onSuccess: (user: any) => {
+      setUser(user?.user);
       setIsAuthenticated(true);
       localStorage.setItem(USER_KEY, JSON.stringify(user));
     },
@@ -119,11 +119,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   const forgotPasswordMutation = useMutation({
-    mutationFn: authApi.forgotPassword,
+    mutationFn: (email: string) => authApi.forgotPassword(email),
   });
 
   const resetPasswordMutation = useMutation({
-    mutationFn: authApi.resetPassword,
+    mutationFn: ({ token, password }: { token: string; password: string }) =>
+      authApi.resetPassword(token, password),
   });
 
   const updatePasswordMutation = useMutation({
@@ -152,7 +153,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const forgotPassword = async (email: string) => {
-    await forgotPasswordMutation.mutateAsync({ email });
+    await forgotPasswordMutation.mutateAsync(email);
   };
 
   const resetPassword = async (token: string, password: string) => {
@@ -166,12 +167,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await updatePasswordMutation.mutateAsync({ currentPassword, newPassword });
   };
 
-  const logout = () => {
-    authApi.logout();
+  const logout = async () => {
+    await authApi.logout();
     localStorage.removeItem(USER_KEY);
     // localStorage.removeItem(ACTIVE_BUSINESS_KEY);
     localStorage.removeItem(AUTH_TOKEN_KEY);
     // queryClient.removeQueries({ queryKey: ["user"] });
+    localStorage.removeItem("activeBusiness");
+
     queryClient.clear();
     setUser(null);
     setIsAuthenticated(false);

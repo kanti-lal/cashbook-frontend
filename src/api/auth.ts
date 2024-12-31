@@ -84,7 +84,7 @@ export const authApi = {
   },
 
   // Request Password Reset
-  forgotPassword: async (email: string) => {
+  forgotPassword: async (email: any) => {
     try {
       const { data } = await apiClient.post("/auth/forgot-password", { email });
       return data;
@@ -95,7 +95,7 @@ export const authApi = {
   },
 
   // Reset Password
-  resetPassword: async (token: string, password: string) => {
+  resetPassword: async (token: any, password: any) => {
     try {
       const { data } = await apiClient.post("/auth/reset-password", {
         token,
