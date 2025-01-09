@@ -7,6 +7,7 @@ import {
   TrendingUp,
   Search,
   Download,
+  LoaderCircle,
 } from "lucide-react";
 import TransactionForm from "../components/TransactionForm";
 import { Transaction } from "../types";
@@ -45,6 +46,7 @@ export default function CashbookPage() {
     suppliers,
     isLoading,
     exportTransactionsPDF,
+    isExportingTransactionsPDF,
   } = useBusiness();
 
   const handleTransactionDetailClick = (transactionId: string) => {
@@ -351,10 +353,19 @@ export default function CashbookPage() {
             <h2 className="text-lg font-semibold">Recent Transactions</h2>
             <button
               onClick={handleExportPDF}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg transition-colors"
+              disabled={isExportingTransactionsPDF}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-purple-600 hover:text-purple-700 hover:bg-purple-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <Download className="w-4 h-4" />
-              <span>Export PDF</span>
+              {isExportingTransactionsPDF ? (
+                <span className="inline-block animate-spin">
+                  <LoaderCircle className="w-4 h-4" />
+                </span>
+              ) : (
+                <Download className="w-4 h-4" />
+              )}
+              <span>
+                {isExportingTransactionsPDF ? "Exporting..." : "Export PDF"}
+              </span>
             </button>
           </div>
         </div>
