@@ -7,7 +7,6 @@ import { suppliersApi } from "../api/suppliers";
 import { transactionsApi } from "../api/transactions";
 import { useAuth } from "./AuthContext";
 import { MonthlyAnalytics } from "../types";
-import { format } from "date-fns";
 
 // Local storage utility functions
 const ACTIVE_BUSINESS_KEY = "activeBusiness";
@@ -455,7 +454,7 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
           createBusinessMutation.mutateAsync(business as Business),
         createCustomer: createCustomerMutation.mutateAsync,
         updateCustomer: updateCustomerMutation.mutateAsync,
-        deleteCustomer: (customerId: string, businessId: string) =>
+        deleteCustomer: (customerId: string) =>
           deleteCustomerMutation.mutateAsync(customerId),
         createSupplier: createSupplierMutation.mutateAsync,
         updateSupplier: updateSupplierMutation.mutateAsync,
