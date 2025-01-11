@@ -74,6 +74,7 @@ export default function HomePage() {
               hover:bg-purple-700 
               transition-colors
               disabled:opacity-50 disabled:cursor-not-allowed
+              md:text-base text-sm
             "
           >
             <BookOpen className="mr-2" size={20} />
@@ -89,6 +90,7 @@ export default function HomePage() {
               hover:bg-green-700 
               transition-colors
               disabled:opacity-50 disabled:cursor-not-allowed
+              md:text-base text-sm
             "
           >
             <Contact className="mr-2" size={20} />
@@ -137,7 +139,7 @@ export default function HomePage() {
         </div>
       )}
 
-      <div className="space-y-4">
+      <div className="space-y-2">
         {businesses.length === 0 ? (
           <div className="text-center py-8">
             <Store className="mx-auto h-12 w-12 text-gray-400 mb-3" />

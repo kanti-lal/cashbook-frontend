@@ -2,9 +2,12 @@ import { ChevronLeft, Store } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useBusiness } from "../context/BusinessContext";
 import ProfileDropdown from "./ProfileDropdown";
+import { truncateText } from "../utils/stringUtils";
+import { useIsMobile } from "../hooks/useBreakpoint";
 
 export default function BusinessSelector() {
   const { activeBusiness, businesses } = useBusiness();
+  const isMobile = useIsMobile();
 
   return (
     <div className="bg-white border-b fixed top-0 left-0 right-0 z-10">
@@ -19,12 +22,8 @@ export default function BusinessSelector() {
               <div className="flex items-center gap-2">
                 <Store size={20} />
                 <span className="font-medium">
-                  {activeBusiness.name.slice(0, 17) + ".."}
+                  {truncateText(activeBusiness.name, isMobile ? 16 : 21)}
                 </span>
-              </div>
-              <div className="text-xs text-gray-500 pl-14">
-                ({businesses.length}{" "}
-                {businesses.length === 1 ? "business" : "businesses"})
               </div>
             </Link>
           </div>
@@ -33,9 +32,21 @@ export default function BusinessSelector() {
             <Store size={20} />
           </div>
         )}
-
-        <div className="relative">
-          <ProfileDropdown />
+        <div className="flex items-center gap-2">
+          {activeBusiness && (
+            <Link
+              to="/"
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+            >
+              <div className="text-xs text-gray-500">
+                ({businesses.length}{" "}
+                {businesses.length === 1 ? "business" : "businesses"})
+              </div>
+            </Link>
+          )}
+          <div className="relative">
+            <ProfileDropdown />
+          </div>
         </div>
       </div>
     </div>

@@ -78,7 +78,9 @@ export default function AllSuppliersReportPage() {
         <Link to="/suppliers" className="p-2 hover:bg-gray-100 rounded-full">
           <ChevronLeft size={24} />
         </Link>
-        <h1 className="text-2xl font-bold">Supplier Transactions Report</h1>
+        <h1 className="text-xl md:text-2xl font-bold">
+          Supplier Transactions Report
+        </h1>
       </div>
 
       {/* Summary Cards */}

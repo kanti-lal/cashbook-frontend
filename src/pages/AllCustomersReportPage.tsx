@@ -76,7 +76,9 @@ export default function AllCustomersReportPage() {
         <Link to="/customers" className="p-2 hover:bg-gray-100 rounded-full">
           <ChevronLeft size={24} />
         </Link>
-        <h1 className="text-2xl font-bold">Customer Transactions Report</h1>
+        <h1 className="text-xl md:text-2xl font-bold">
+          Customer Transactions Report
+        </h1>
       </div>
 
       {/* Summary Cards */}
