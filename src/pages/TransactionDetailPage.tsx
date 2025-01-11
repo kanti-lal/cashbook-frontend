@@ -336,7 +336,7 @@ export default function TransactionDetailPage() {
           <div className="flex gap-2">
             <button
               type="submit"
-              className="flex-1 bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition-colors"
+              className="flex-1 bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 transition-colors"
             >
               Save Changes
             </button>

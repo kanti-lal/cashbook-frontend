@@ -41,7 +41,7 @@ const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 function LoadingSpinner() {
   return (
     <div className="fixed inset-0 flex items-center justify-center">
-      <Loader2 className="w-8 h-8 animate-spin text-blue-500" />
+      <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
     </div>
   );
 }
@@ -50,7 +50,7 @@ function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <BusinessSelector />
-      <main className="flex-1 max-w-md w-full mx-auto px-4 pt-14 pb-16">
+      <main className="flex-1 max-w-md w-full mx-auto px-0 pt-12 pb-16">
         <Suspense fallback={<LoadingSpinner />}>{children}</Suspense>
       </main>
       <div className="fixed bottom-0 left-0 right-0 z-10">
