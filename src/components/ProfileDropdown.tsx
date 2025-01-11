@@ -27,6 +27,7 @@ export default function ProfileDropdown() {
         <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5  z-10">
           <Link
             to="/profile"
+            onClick={() => setIsOpen(false)}
             className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
           >
             <User size={16} className="mr-2" />
@@ -34,7 +35,10 @@ export default function ProfileDropdown() {
           </Link>
 
           <button
-            onClick={toggleTheme}
+            onClick={() => {
+              toggleTheme();
+              setIsOpen(false);
+            }}
             className="w-full flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
           >
             {theme === "dark" ? (
@@ -46,7 +50,10 @@ export default function ProfileDropdown() {
           </button>
 
           <button
-            onClick={logout}
+            onClick={() => {
+              logout();
+              setIsOpen(false);
+            }}
             className="w-full flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
           >
             <LogOut size={16} className="mr-2" />
