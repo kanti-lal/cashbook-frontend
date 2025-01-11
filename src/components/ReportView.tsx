@@ -7,7 +7,7 @@ import {
   startOfDay,
   endOfDay,
 } from "date-fns";
-import { Search, ArrowDownCircle, ArrowUpCircle } from "lucide-react";
+import { ArrowDownCircle, ArrowUpCircle } from "lucide-react";
 import { Transaction } from "../types";
 
 interface ReportViewProps {
