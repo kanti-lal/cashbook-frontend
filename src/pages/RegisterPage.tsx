@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { AlertCircle, UserPlus, Eye, EyeOff } from "lucide-react";
+import { AlertCircle, UserPlus, Eye, EyeOff, Loader2 } from "lucide-react";
 
 interface FormData {
   email: string;
@@ -24,7 +24,7 @@ export default function RegisterPage() {
     dateOfBirth: "",
   });
   const [error, setError] = useState("");
-  const { register } = useAuth();
+  const { register, isLoading } = useAuth();
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -238,10 +238,15 @@ export default function RegisterPage() {
           <div>
             <button
               type="submit"
+              disabled={isLoading}
               className="w-full  py-3 px-4 border border-transparent rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-300 ease-in-out transform hover:scale-101 active:scale-99 flex items-center justify-center gap-2"
             >
-              <UserPlus size={20} />
-              Sign Up
+              {isLoading ? (
+                <Loader2 className="animate-spin" size={20} />
+              ) : (
+                <UserPlus size={20} />
+              )}
+              {isLoading ? "Creating Account..." : "Sign Up"}
             </button>
           </div>
 
