@@ -36,8 +36,6 @@ export default function TransactionDetailPage() {
 
   const transaction = transactions.find((t) => t.id === transactionId);
 
-  console.log({ transaction });
-
   const [paymentMode, setPaymentMode] = useState(
     transaction?.paymentMode || "CASH"
   );
