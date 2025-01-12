@@ -33,7 +33,28 @@ export default function BusinessSelector() {
           </div>
         )}
         <div className="flex items-center gap-2">
-          {activeBusiness && (
+          {/* {activeBusiness && (
+            <Link
+              to="/"
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+            >
+              <div className="text-xs text-gray-500">
+                ({businesses.length}{" "}
+                {businesses.length === 1 ? "business" : "businesses"})
+              </div>
+            </Link>
+          )} */}
+
+          {businesses.length === 0 ? (
+            <Link
+              to="/"
+              className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
+            >
+              <div className="text-xs text-gray-500">
+                ({businesses.length} {"business"})
+              </div>
+            </Link>
+          ) : (
             <Link
               to="/"
               className="flex items-center gap-2 text-gray-600 hover:text-gray-900"
