@@ -36,6 +36,8 @@ export default function TransactionDetailPage() {
 
   const transaction = transactions.find((t) => t.id === transactionId);
 
+  console.log({ transaction });
+
   const [paymentMode, setPaymentMode] = useState(
     transaction?.paymentMode || "CASH"
   );
@@ -119,7 +121,7 @@ export default function TransactionDetailPage() {
           </div>
         </div>
 
-        <div className="space-y-6">
+        <div className="space-y-4">
           <div className="flex items-center gap-3">
             {transaction.type === "IN" ? (
               <ArrowDownCircle className="w-8 h-8 text-green-600" />
@@ -132,6 +134,19 @@ export default function TransactionDetailPage() {
               }`}
             >
               ₹{transaction.amount.toLocaleString()}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-2">
+            {transaction.paymentMode === "CASH" ? (
+              <Banknote className="w-5 h-5 text-gray-600" />
+            ) : (
+              <CreditCard className="w-5 h-5 text-gray-600" />
+            )}
+            <span className="text-gray-600">
+              {transaction.paymentMode === "CASH"
+                ? "Cash Payment"
+                : "Online Payment"}
             </span>
           </div>
 
