@@ -191,8 +191,10 @@ export default function CashbookPage() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col h-screen bg-gray-50 items-center justify-center">
-        <p className="text-gray-600">Loading transactions...</p>
+      <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-900 items-center justify-center">
+        <p className="text-gray-600 dark:text-gray-200">
+          Loading transactions...
+        </p>
       </div>
     );
   }
