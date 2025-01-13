@@ -94,7 +94,7 @@ export default function AddCustomerForm({
       <div>
         <label
           htmlFor="name"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-200"
         >
           Customer Name*
         </label>
@@ -103,9 +103,11 @@ export default function AddCustomerForm({
           id="name"
           value={name}
           onChange={(e) => setName(e.target.value)}
-          className={`mt-1 block w-full rounded-md shadow-sm p-2 border ${
-            errors.name ? "border-red-500" : "border-gray-300"
-          } focus:border-purple-500 focus:ring-purple-500`}
+          className={`mt-1 block w-full rounded-md shadow-sm p-2 border bg-white dark:bg-gray-700 ${
+            errors.name
+              ? "border-red-500"
+              : "border-gray-300 dark:border-gray-600"
+          } focus:border-purple-500 focus:ring-purple-500 dark:text-gray-100`}
           placeholder="Enter customer name"
         />
         {errors.name && (
@@ -119,7 +121,7 @@ export default function AddCustomerForm({
       <div>
         <label
           htmlFor="phone"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-200"
         >
           Phone Number*
         </label>
@@ -128,9 +130,11 @@ export default function AddCustomerForm({
           id="phone"
           value={phoneNumber}
           onChange={handlePhoneNumberChange}
-          className={`mt-1 block w-full rounded-md shadow-sm p-2 border ${
-            errors.phoneNumber ? "border-red-500" : "border-gray-300"
-          } focus:border-purple-500 focus:ring-purple-500`}
+          className={`mt-1 block w-full rounded-md shadow-sm p-2 border bg-white dark:bg-gray-700 ${
+            errors.phoneNumber
+              ? "border-red-500"
+              : "border-gray-300 dark:border-gray-600"
+          } focus:border-purple-500 focus:ring-purple-500 dark:text-gray-100`}
           placeholder="Enter 10-digit phone number"
         />
         {errors.phoneNumber && (
@@ -143,13 +147,15 @@ export default function AddCustomerForm({
 
       <button
         type="submit"
-        className="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 transition-colors disabled:bg-purple-300"
+        className="w-full bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 transition-colors disabled:bg-purple-300 dark:disabled:bg-purple-900"
         disabled={!name.trim() || !phoneNumber.trim()}
       >
         Add Customer
       </button>
 
-      <p className="text-xs text-gray-500 text-center">* Required fields</p>
+      <p className="text-xs text-gray-500 dark:text-gray-400 text-center">
+        * Required fields
+      </p>
     </form>
   );
 }

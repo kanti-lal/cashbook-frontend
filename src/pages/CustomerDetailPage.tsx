@@ -143,43 +143,54 @@ export default function CustomerDetailPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4 pb-20">
+    <div className="max-w-md mx-auto p-4 pb-20 dark:bg-gray-900">
       <div className="flex items-center gap-2 mb-4">
-        <button onClick={() => navigate(-1)} className="">
-          <CircleArrowLeft size={24} className="text-gray-900" />
+        <button onClick={() => navigate(-1)}>
+          <CircleArrowLeft
+            size={24}
+            className="text-gray-900 dark:text-gray-100"
+          />
         </button>
-        <h1 className="text-2xl font-bold ">Customer Details page</h1>
+        <h1 className="text-2xl font-bold dark:text-white">
+          Customer Details page
+        </h1>
       </div>
-      <div className="bg-white rounded-lg shadow-sm p-4 mb-6">
+
+      {/* Customer Info Card */}
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-4 mb-6">
         <div className="flex justify-between items-start mb-2">
           <div>
-            <h1 className="text-xl font-bold">{customerDetails.name}</h1>
-            <p className="text-gray-600 text-sm">
+            <h1 className="text-xl font-bold dark:text-white">
+              {customerDetails.name}
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400">
               {customerDetails.phoneNumber}
             </p>
           </div>
           <div className="flex gap-2">
             <button
               onClick={() => setShowEditModal(true)}
-              className="p-2 rounded-full hover:bg-gray-100"
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
             >
-              <Pencil size={20} className="text-gray-600" />
+              <Pencil size={20} className="text-gray-600 dark:text-gray-400" />
             </button>
             <button
               onClick={() => setShowDeleteModal(true)}
-              className="p-2 rounded-full hover:bg-gray-100"
+              className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700"
             >
               <Trash2 size={20} className="text-red-600" />
             </button>
           </div>
         </div>
+
+        {/* Transaction Buttons */}
         <div className="mt-2 grid grid-cols-2 gap-2">
           <button
             onClick={() => {
               setTransactionType("IN");
               setShowTransactionForm(true);
             }}
-            className="py-2 px-4 bg-green-100 text-green-700 rounded-md hover:bg-green-200"
+            className="py-2 px-4 bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400 rounded-md hover:bg-green-200 dark:hover:bg-green-900/70"
           >
             Get Money
           </button>
@@ -188,14 +199,18 @@ export default function CustomerDetailPage() {
               setTransactionType("OUT");
               setShowTransactionForm(true);
             }}
-            className="py-2 px-4 bg-red-100 text-red-700 rounded-md hover:bg-red-200"
+            className="py-2 px-4 bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-400 rounded-md hover:bg-red-200 dark:hover:bg-red-900/70"
           >
             Give Money
           </button>
         </div>
+
+        {/* Balance */}
         <p
           className={`text-md mt-2 font-semibold ${
-            customerDetails.balance >= 0 ? "text-green-600" : "text-red-600"
+            customerDetails.balance >= 0
+              ? "text-green-600 dark:text-green-400"
+              : "text-red-600 dark:text-red-400"
           }`}
         >
           Balance: ₹{Math.abs(customerDetails.balance)}
@@ -257,13 +272,13 @@ export default function CustomerDetailPage() {
       </Modal>
 
       {/* View Mode Tabs */}
-      <div className="flex justify-between mb-4 border-b">
+      <div className="flex justify-between mb-4 border-b dark:border-gray-700">
         <div>
           <button
             className={`py-2 px-4 ${
               viewMode === "transactions"
-                ? "border-b-2 border-purple-500 text-purple-600"
-                : "text-gray-600"
+                ? "border-b-2 border-purple-500 text-purple-600 dark:text-purple-400"
+                : "text-gray-600 dark:text-gray-400"
             }`}
             onClick={() => setViewMode("transactions")}
           >
@@ -272,8 +287,8 @@ export default function CustomerDetailPage() {
           <button
             className={`py-2 px-4 ${
               viewMode === "report"
-                ? "border-b-2 border-purple-500 text-purple-600"
-                : "text-gray-600"
+                ? "border-b-2 border-purple-500 text-purple-600 dark:text-purple-400"
+                : "text-gray-600 dark:text-gray-400"
             }`}
             onClick={() => setViewMode("report")}
           >
@@ -283,7 +298,7 @@ export default function CustomerDetailPage() {
         <button
           onClick={handleExportPDF}
           disabled={isExportingCustomerLedgerPDF}
-          className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-purple-600 hover:text-purple-700 bg-purple-100 hover:bg-purple-200 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed h-[38px]"
+          className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-purple-600 dark:text-purple-400 bg-purple-100 dark:bg-purple-900/50 hover:bg-purple-200 dark:hover:bg-purple-900/70 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed h-[38px]"
         >
           {isExportingCustomerLedgerPDF ? (
             <span className="inline-block animate-spin">
@@ -303,13 +318,13 @@ export default function CustomerDetailPage() {
           {groupedTransactions.map((group) => (
             <div key={group.date} className="space-y-1">
               {/* Date header */}
-              <div className="bg-purple-50 rounded-lg p-2.5 border border-purple-100">
+              <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-2.5 border border-purple-100 dark:border-purple-900/50">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-medium text-purple-900">
+                    <h3 className="font-medium text-purple-900 dark:text-purple-100">
                       {format(new Date(group.date), "dd MMM yyyy")}
                     </h3>
-                    <span className="text-xs px-2 py-0.5 bg-purple-100 rounded-full text-purple-700">
+                    <span className="text-xs px-2 py-0.5 bg-purple-100 dark:bg-purple-900/50 rounded-full text-purple-700 dark:text-purple-300">
                       {group.transactions.length} transactions
                     </span>
                   </div>
@@ -338,7 +353,7 @@ export default function CustomerDetailPage() {
           ))}
 
           {transactions.length === 0 && (
-            <p className="text-center text-gray-500 py-4">
+            <p className="text-center text-gray-500 dark:text-gray-400 py-4">
               No transactions yet
             </p>
           )}
