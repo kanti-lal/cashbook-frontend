@@ -106,12 +106,12 @@ export default function SuppliersPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto p-4 pb-20">
+    <div className="max-w-md mx-auto p-4 pb-20 dark:bg-gray-900 ">
       <div className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Suppliers</h1>
+        <h1 className="text-2xl font-bold dark:text-white">Suppliers</h1>
         <button
           onClick={() => setShowAddModal(true)}
-          className="p-2 rounded-full bg-purple-100 text-purple-600 hover:bg-purple-200 transition-colors"
+          className="p-2 rounded-full bg-purple-100 dark:bg-purple-900 text-purple-600 dark:text-purple-300 hover:bg-purple-200 dark:hover:bg-purple-800 transition-colors"
         >
           <Plus size={24} />
         </button>
@@ -131,7 +131,7 @@ export default function SuppliersPage() {
         <div className="w-full">
           <Link
             to="/suppliers/report"
-            className="w-full mb-3 py-3 px-4 flex-1 bg-purple-100 text-purple-700 rounded-lg flex items-center justify-center gap-2  hover:bg-purple-200 transition-colors text-sm  md:text-[16px]"
+            className="w-full mb-3 py-3 px-4 flex-1 bg-purple-100 text-purple-700 rounded-lg flex items-center justify-center gap-2 hover:bg-purple-200 transition-colors text-sm md:text-[16px]"
           >
             <FileText size={20} />
             View Supplier Report
@@ -162,7 +162,7 @@ export default function SuppliersPage() {
           <p className="text-lg font-semibold text-green-600">₹{totalToGive}</p>
         </div>
         <div className="bg-red-50 p-4 rounded-lg">
-          <p className="text-sm text-red-800">You Will Get</p>
+          <p className="text-sm text-red-800 ">You Will Get</p>
           <p className="text-lg font-semibold text-red-600">₹{totalToGet}</p>
         </div>
       </div>
@@ -175,14 +175,14 @@ export default function SuppliersPage() {
             placeholder="Search suppliers..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-2 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+            className="w-full pl-10 pr-2 py-2 border dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-purple-500"
           />
           <Search className="absolute left-3 top-2.5 text-gray-400" size={20} />
         </div>
         <select
           value={sortBy}
           onChange={(e) => setSortBy(e.target.value as SortOption)}
-          className="px-2 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 bg-white"
+          className="px-2 py-2 border dark:border-gray-600 dark:bg-gray-800 dark:text-white rounded-lg focus:ring-2 focus:ring-purple-500"
         >
           <option value="name">A-Z</option>
           <option value="oldest">Date ↑</option>
@@ -193,27 +193,41 @@ export default function SuppliersPage() {
 
       <div className="space-y-2">
         {filteredAndSortedSuppliers.length === 0 ? (
-          <p className="text-center text-gray-500 py-4">No suppliers found</p>
+          <p className="text-center text-gray-500 dark:text-gray-400 py-4">
+            No suppliers found
+          </p>
         ) : (
           filteredAndSortedSuppliers.map((supplier) => (
             <Link
               key={supplier.id}
               to={`/suppliers/${supplier.id}`}
-              className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 flex justify-between items-center"
+              className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-700"
             >
               <div>
-                <h3 className="font-medium">{supplier.name}</h3>
-                <p className="text-sm text-gray-600">{supplier.phoneNumber}</p>
+                <h3 className="font-medium dark:text-white">{supplier.name}</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  {supplier.phoneNumber}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {supplier.balance === 0
+                    ? "No balance"
+                    : supplier.balance > 0
+                    ? "You will give"
+                    : "You will get"}
+                </p>
               </div>
               <div className="flex items-center gap-4">
                 <span
                   className={`font-medium ${
-                    supplier.balance >= 0 ? "text-green-600" : "text-red-600"
+                    supplier.balance >= 0 ? "text-green-600 " : "text-red-600 "
                   }`}
                 >
                   ₹{Math.abs(supplier.balance)}
                 </span>
-                <ChevronRight className="text-gray-400" size={20} />
+                <ChevronRight
+                  className="text-gray-400 dark:text-gray-500"
+                  size={20}
+                />
               </div>
             </Link>
           ))
