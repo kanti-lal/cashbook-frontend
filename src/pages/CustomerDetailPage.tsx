@@ -59,7 +59,7 @@ export default function CustomerDetailPage() {
 
   if (isLoadingCustomer || isLoadingSupplierTransactions) {
     return (
-      <div className="p-4 max-w-md mx-auto text-center">
+      <div className="p-4 max-w-md mx-auto text-center dark:text-gray-200 ">
         Loading customer details...
       </div>
     );
