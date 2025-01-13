@@ -74,12 +74,15 @@ export default function TransactionForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-4 text-gray-900 dark:text-gray-100"
+    >
       {customers && !supplierId && !customerId && (
-        <div>
+        <div className="text-gray-900 dark:text-gray-100">
           <label
             htmlFor="customer"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-200"
           >
             Select Customer
           </label>
@@ -87,12 +90,18 @@ export default function TransactionForm({
             id="customer"
             value={selectedCustomerId}
             onChange={(e) => setSelectedCustomerId(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-2 border"
+            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-2 border dark:bg-gray-700 dark:text-gray-100"
             required
           >
-            <option value="">Select a customer</option>
+            <option value="" className="dark:text-gray-100">
+              Select a customer
+            </option>
             {customers.map((customer) => (
-              <option key={customer.id} value={customer.id}>
+              <option
+                key={customer.id}
+                value={customer.id}
+                className="dark:text-gray-100"
+              >
                 {customer.name}
               </option>
             ))}
@@ -101,10 +110,10 @@ export default function TransactionForm({
       )}
 
       {suppliers && !supplierId && !customerId && (
-        <div>
+        <div className="text-gray-900 dark:text-gray-100">
           <label
             htmlFor="supplier"
-            className="block text-sm font-medium text-gray-700"
+            className="block text-sm font-medium text-gray-700 dark:text-gray-200"
           >
             Select Supplier
           </label>
@@ -112,12 +121,18 @@ export default function TransactionForm({
             id="supplier"
             value={selectedSupplierId}
             onChange={(e) => setSelectedSupplierId(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-2 border"
+            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-2 border dark:bg-gray-700 dark:text-gray-100"
             required
           >
-            <option value="">Select a supplier</option>
+            <option value="" className="dark:text-gray-100">
+              Select a supplier
+            </option>
             {suppliers.map((supplier) => (
-              <option key={supplier.id} value={supplier.id}>
+              <option
+                key={supplier.id}
+                value={supplier.id}
+                className="dark:text-gray-100"
+              >
                 {supplier.name}
               </option>
             ))}
@@ -125,10 +140,10 @@ export default function TransactionForm({
         </div>
       )}
 
-      <div>
+      <div className="text-gray-900 dark:text-gray-100">
         <label
           htmlFor="amount"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-200"
         >
           Amount
         </label>
@@ -142,22 +157,25 @@ export default function TransactionForm({
             e.target.blur();
             e.preventDefault();
           }}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-2 border"
+          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-2 border dark:bg-gray-700 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
           required
           min="0"
           step="0"
         />
       </div>
-      <div className="flex justify-between items-center space-x-1">
-        <span className="text-sm font-medium text-gray-700">Payment Mode</span>
-        <div className="flex bg-gray-100 rounded-full p-[3px] w-36">
+
+      <div className="flex justify-between items-center space-x-1 text-gray-900 dark:text-gray-100">
+        <span className="text-sm font-medium text-gray-700 dark:text-gray-200">
+          Payment Mode
+        </span>
+        <div className="flex bg-gray-100 dark:bg-gray-700 rounded-full p-[3px] w-36">
           <button
             type="button"
             onClick={() => setPaymentMode("CASH")}
             className={`flex items-center justify-center w-1/2 py-1 text-[11px] font-medium rounded-full transition-colors duration-200 focus:outline-none ${
               paymentMode === "CASH"
-                ? "bg-white text-purple-700 shadow-sm"
-                : "text-gray-700 hover:bg-gray-200"
+                ? "bg-white dark:bg-gray-800 text-purple-700 dark:text-purple-400 shadow-sm"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
             }`}
             aria-pressed={paymentMode === "CASH"}
           >
@@ -169,8 +187,8 @@ export default function TransactionForm({
             onClick={() => setPaymentMode("ONLINE")}
             className={`flex items-center justify-center w-1/2 py-1 text-[11px] font-medium rounded-full transition-colors duration-200 focus:outline-none ${
               paymentMode === "ONLINE"
-                ? "bg-white text-purple-700 shadow-sm"
-                : "text-gray-700 hover:bg-gray-200"
+                ? "bg-white dark:bg-gray-800 text-purple-700 dark:text-purple-400 shadow-sm"
+                : "text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
             }`}
             aria-pressed={paymentMode === "ONLINE"}
           >
@@ -179,10 +197,11 @@ export default function TransactionForm({
           </button>
         </div>
       </div>
-      <div>
+
+      <div className="text-gray-900 dark:text-gray-100">
         <label
           htmlFor="transaction-date"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-200"
         >
           Transaction Date
         </label>
@@ -191,14 +210,14 @@ export default function TransactionForm({
           id="transaction-date"
           value={transactionDate}
           onChange={(e) => setTransactionDate(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-2 border"
+          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-2 border dark:bg-gray-700 dark:text-gray-100"
         />
       </div>
 
-      <div>
+      <div className="text-gray-900 dark:text-gray-100">
         <label
           htmlFor="description"
-          className="block text-sm font-medium text-gray-700"
+          className="block text-sm font-medium text-gray-700 dark:text-gray-200"
         >
           Description
         </label>
@@ -208,21 +227,21 @@ export default function TransactionForm({
           value={description}
           placeholder="Enter description"
           onChange={(e) => setDescription(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-2 border"
+          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-2 border dark:bg-gray-700 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
         />
       </div>
 
       <div className="flex gap-2">
         <button
           type="submit"
-          className="flex-1 bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 transition-colors"
+          className="flex-1 bg-purple-600 text-white py-2 px-4 rounded-md hover:bg-purple-700 dark:bg-purple-600 dark:hover:bg-purple-700 transition-colors"
         >
           Save
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="flex-1 bg-gray-200 text-gray-800 py-2 px-4 rounded-md hover:bg-gray-300 transition-colors"
+          className="flex-1 bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 py-2 px-4 rounded-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
         >
           Cancel
         </button>

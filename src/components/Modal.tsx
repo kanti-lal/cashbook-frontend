@@ -1,5 +1,5 @@
-import { X } from 'lucide-react';
-import { ReactNode } from 'react';
+import { X } from "lucide-react";
+import { ReactNode } from "react";
 
 interface ModalProps {
   isOpen: boolean;
@@ -8,21 +8,31 @@ interface ModalProps {
   children: ReactNode;
 }
 
-export default function Modal({ isOpen, onClose, title, children }: ModalProps) {
+export default function Modal({
+  isOpen,
+  onClose,
+  title,
+  children,
+}: ModalProps) {
   if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-40 overflow-y-auto">
-      <div className="fixed inset-0 bg-black/50" onClick={onClose} />
+      <div
+        className="fixed inset-0 bg-black/50 dark:bg-black/70"
+        onClick={onClose}
+      />
       <div className="flex min-h-full items-center justify-center p-4">
-        <div className="relative w-full max-w-md transform overflow-hidden rounded-lg bg-white p-6 shadow-xl transition-all">
+        <div className="relative w-full max-w-md transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 p-6 shadow-xl transition-all">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold">{title}</h2>
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-white">
+              {title}
+            </h2>
             <button
               onClick={onClose}
-              className="rounded-full p-1 hover:bg-gray-100 transition-colors"
+              className="rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
             >
-              <X size={20} className="text-gray-500" />
+              <X size={20} className="text-gray-500 dark:text-gray-400" />
             </button>
           </div>
           {children}

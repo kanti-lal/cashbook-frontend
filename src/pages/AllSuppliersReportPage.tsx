@@ -73,37 +73,44 @@ export default function AllSuppliersReportPage() {
   });
 
   return (
-    <div className="max-w-md mx-auto p-4 pb-20">
+    <div className="max-w-md mx-auto p-4 pb-20 dark:bg-gray-900">
       <div className="flex items-center gap-2 mb-6">
-        <Link to="/suppliers" className="p-2 hover:bg-gray-100 rounded-full">
-          <ChevronLeft size={24} />
+        <Link
+          to="/suppliers"
+          className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
+        >
+          <ChevronLeft size={24} className="dark:text-gray-200" />
         </Link>
-        <h1 className="text-xl md:text-2xl font-bold">
+        <h1 className="text-xl md:text-2xl font-bold dark:text-white">
           Supplier Transactions Report
         </h1>
       </div>
 
       {/* Summary Cards */}
       <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="bg-green-50 p-4 rounded-lg">
-          <p className="text-sm text-green-800">Total Purchased</p>
-          <p className="text-lg font-semibold text-green-600">
+        <div className="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg">
+          <p className="text-sm text-green-800 dark:text-green-300">
+            Total Purchased
+          </p>
+          <p className="text-lg font-semibold text-green-600 dark:text-green-400">
             ₹{totalPurchased}
           </p>
         </div>
-        <div className="bg-red-50 p-4 rounded-lg">
-          <p className="text-sm text-red-800"> Total Paid</p>
-          <p className="text-lg font-semibold text-red-600">₹{totalPaid}</p>
+        <div className="bg-red-50 dark:bg-red-900/30 p-4 rounded-lg">
+          <p className="text-sm text-red-800 dark:text-red-300">Total Paid</p>
+          <p className="text-lg font-semibold text-red-600 dark:text-red-400">
+            ₹{totalPaid}
+          </p>
         </div>
       </div>
 
       {/* View Mode Tabs */}
-      <div className="flex mb-4 border-b">
+      <div className="flex mb-4 border-b dark:border-gray-700">
         <button
           className={`py-2 px-4 ${
             viewMode === "transactions"
-              ? "border-b-2 border-purple-500 text-purple-600"
-              : "text-gray-600"
+              ? "border-b-2 border-purple-500 text-purple-600 dark:text-purple-400"
+              : "text-gray-600 dark:text-gray-400"
           }`}
           onClick={() => setViewMode("transactions")}
         >
@@ -112,8 +119,8 @@ export default function AllSuppliersReportPage() {
         <button
           className={`py-2 px-4 ${
             viewMode === "report"
-              ? "border-b-2 border-purple-500 text-purple-600"
-              : "text-gray-600"
+              ? "border-b-2 border-purple-500 text-purple-600 dark:text-purple-400"
+              : "text-gray-600 dark:text-gray-400"
           }`}
           onClick={() => setViewMode("report")}
         >
@@ -130,38 +137,42 @@ export default function AllSuppliersReportPage() {
         />
       ) : (
         <div className="space-y-4">
-          {/* Report View */}
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-gray-50">
+              <thead className="bg-gray-50 dark:bg-gray-800">
                 <tr>
-                  <th className="px-4 py-2 text-left text-sm text-gray-600">
+                  <th className="px-4 py-2 text-left text-sm text-gray-600 dark:text-gray-300">
                     Supplier
                   </th>
-                  <th className="px-4 py-2 text-right text-sm text-gray-600">
+                  <th className="px-4 py-2 text-right text-sm text-gray-600 dark:text-gray-300">
                     Purchased
                   </th>
-                  <th className="px-4 py-2 text-right text-sm text-gray-600">
+                  <th className="px-4 py-2 text-right text-sm text-gray-600 dark:text-gray-300">
                     Paid
                   </th>
-                  <th className="px-4 py-2 text-right text-sm text-gray-600">
+                  <th className="px-4 py-2 text-right text-sm text-gray-600 dark:text-gray-300">
                     Balance
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="dark:text-gray-200">
                 {supplierSummary.map((summary) => (
-                  <tr key={summary.id} className="border-b">
+                  <tr
+                    key={summary.id}
+                    className="border-b dark:border-gray-700"
+                  >
                     <td className="px-4 py-2">{summary.name}</td>
-                    <td className="px-4 py-2 text-right text-green-600">
+                    <td className="px-4 py-2 text-right text-green-600 dark:text-green-400">
                       ₹{summary.purchased}
                     </td>
-                    <td className="px-4 py-2 text-right text-red-600">
+                    <td className="px-4 py-2 text-right text-red-600 dark:text-red-400">
                       ₹{summary.paid}
                     </td>
                     <td
                       className={`px-4 py-2 text-right font-medium ${
-                        summary.balance >= 0 ? "text-green-600" : "text-red-600"
+                        summary.balance >= 0
+                          ? "text-green-600 dark:text-green-400"
+                          : "text-red-600 dark:text-red-400"
                       }`}
                     >
                       ₹{summary.balance}

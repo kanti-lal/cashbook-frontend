@@ -48,7 +48,7 @@ function LoadingSpinner() {
 
 function ProtectedLayout({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       <BusinessSelector />
       <main className="flex-1 max-w-md w-full mx-auto px-0 pt-12 pb-16">
         <Suspense fallback={<LoadingSpinner />}>{children}</Suspense>
