@@ -31,7 +31,7 @@ export default function TransactionDetailPage() {
   } = useBusiness();
 
   if (!activeBusiness || !transactionId) {
-    return <div>Loading...</div>;
+    return <div className="text-gray-800 dark:text-gray-200">Loading...</div>;
   }
 
   const transaction = transactions.find((t) => t.id === transactionId);

@@ -43,7 +43,7 @@ export default function HomePage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center h-screen dark:text-gray-200">
         Loading...
       </div>
     );
