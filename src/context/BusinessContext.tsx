@@ -1,4 +1,10 @@
-import { createContext, useContext, ReactNode, useState } from "react";
+import {
+  createContext,
+  useContext,
+  ReactNode,
+  useState,
+  useEffect,
+} from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Business, Customer, Supplier, Transaction } from "../api/types";
 import { businessesApi } from "../api/businesses";
@@ -124,9 +130,20 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
   const { isAuthenticated } = useAuth();
   const queryClient = useQueryClient();
   // Initialize active business from localStorage
-  const [activeBusiness, setActiveBusiness] = useState<Business | null>(
-    localStorageUtils.getActiveBusiness()
-  );
+  // const [activeBusiness, setActiveBusiness] = useState<Business | null>(
+  //   localStorageUtils.getActiveBusiness()
+  // );
+
+  // Initialize active business state
+  const [activeBusiness, setActiveBusiness] = useState<Business | null>(null);
+
+  // Load active business from localStorage on mount
+  useEffect(() => {
+    const storedBusiness = localStorageUtils.getActiveBusiness();
+    if (storedBusiness) {
+      setActiveBusiness(storedBusiness);
+    }
+  }, []);
 
   // Queries
   const {
