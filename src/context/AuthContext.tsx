@@ -169,12 +169,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = async () => {
     await authApi.logout();
-    localStorage.removeItem(USER_KEY);
-    // localStorage.removeItem(ACTIVE_BUSINESS_KEY);
-    localStorage.removeItem(AUTH_TOKEN_KEY);
-    // queryClient.removeQueries({ queryKey: ["user"] });
-    localStorage.removeItem("activeBusiness");
-
+    // localStorage.removeItem(USER_KEY);
+    // localStorage.removeItem(AUTH_TOKEN_KEY);
+    // localStorage.removeItem("activeBusiness");
+    localStorage.clear();
     queryClient.clear();
     setUser(null);
     setIsAuthenticated(false);

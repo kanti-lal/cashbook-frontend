@@ -145,6 +145,8 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  console.log("activeBusiness", activeBusiness);
+
   // Queries
   const {
     data: businesses = [],
