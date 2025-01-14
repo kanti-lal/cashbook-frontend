@@ -162,7 +162,8 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
       queryFn: () => transactionsApi.getAll(activeBusiness!.id),
       staleTime: 5 * 60 * 1000, // 5 minutes
       gcTime: 30 * 60 * 1000, // 30 minutes
-      enabled: !!activeBusiness?.id,
+      retry: 3,
+      enabled: !!activeBusiness?.id && isAuthenticated,
     });
 
   const getCustomerById = (customerId: string | undefined) => {
