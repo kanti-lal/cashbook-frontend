@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { AlertCircle, UserPlus, Eye, EyeOff, Loader2 } from "lucide-react";
+import { CashioLogo } from "../components/common/CashioLogo";
 
 interface FormData {
   email: string;
@@ -52,6 +53,9 @@ export default function RegisterPage() {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-white py-4 md:py-12 px-2 sm:px-6 lg:px-8">
       <div className="max-w-xl w-full space-y-8 bg-white shadow-2xl rounded-xl p-4 md:p-6 border border-gray-100">
         <div className="text-center">
+          <div className="flex items-center justify-center">
+            <CashioLogo size="lg" className="w-auto mx-auto  mb-3 md:mb-4" />
+          </div>
           <h2 className="text-2xl md:text-4xl font-bold text-gray-800 mb-2">
             Create Your Account
           </h2>

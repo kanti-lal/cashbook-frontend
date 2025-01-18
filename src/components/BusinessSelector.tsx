@@ -5,6 +5,7 @@ import ProfileDropdown from "./ProfileDropdown";
 import { truncateText } from "../utils/stringUtils";
 import { useIsMobile } from "../hooks/useBreakpoint";
 import { BookIcon } from "./common/Icon";
+import { CashioLogo } from "./common/CashioLogo";
 
 export default function BusinessSelector() {
   const { activeBusiness, businesses } = useBusiness();
@@ -20,12 +21,7 @@ export default function BusinessSelector() {
         <div className="flex items-center gap-4">
           {!isMobile && (
             <Link to="/" className="">
-              <div className="flex items-center gap-1">
-                <BookIcon className="h-[34px] text-purple-500" />
-                <span className="text-3xl font-medium text-black dark:text-white font-crostan">
-                  Cashio
-                </span>
-              </div>
+              <CashioLogo size="md" />
             </Link>
           )}
           {activeBusiness ? (
