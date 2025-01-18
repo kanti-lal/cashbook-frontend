@@ -25,10 +25,10 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-white py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white shadow-2xl rounded-xl p-10 border border-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-white py-12 px-2 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 bg-white shadow-2xl rounded-xl p-4 md:p-6 border border-gray-100">
         <div className="text-center">
-          <h2 className="text-4xl font-bold text-gray-800 mb-2">
+          <h2 className="text-2xl md:text-4xl font-bold text-gray-800 mb-2">
             Forgot Password
           </h2>
           <p className="text-gray-500 mb-6">

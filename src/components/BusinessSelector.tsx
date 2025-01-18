@@ -14,8 +14,8 @@ export default function BusinessSelector() {
     <div className="bg-white dark:bg-gray-800 border-b dark:border-gray-700 fixed top-0 left-0 right-0 z-10">
       <div
         className={`${
-          isMobile ? "max-w-md" : "pl-4 pr-8"
-        } mx-auto flex items-center justify-between h-14`}
+          isMobile ? "max-w-md" : ""
+        } mx-auto flex items-center px-4 justify-between h-14`}
       >
         <div className="flex items-center gap-4">
           {!isMobile && (
@@ -29,12 +29,21 @@ export default function BusinessSelector() {
             </Link>
           )}
           {activeBusiness ? (
-            <div className="flex items-center gap-2 pl-[105px]">
-              <Store size={20} className="text-gray-600 dark:text-gray-300" />
-              <span className="font-medium text-gray-700 dark:text-gray-200">
-                {truncateText(activeBusiness.name, isMobile ? 16 : 21)}
-              </span>
-            </div>
+            <Link
+              to="/"
+              className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+            >
+              <div className="flex items-center gap-2 md:pl-[105px]">
+                <ChevronLeft
+                  size={18}
+                  className="text-gray-600 dark:text-gray-300"
+                />
+                <Store size={20} className="text-gray-600 dark:text-gray-300" />
+                <span className="font-medium text-gray-700 dark:text-gray-200">
+                  {truncateText(activeBusiness.name, isMobile ? 16 : 21)}
+                </span>
+              </div>
+            </Link>
           ) : (
             <div className="text-gray-600 dark:text-gray-300">
               <Store size={20} />
