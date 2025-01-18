@@ -6,6 +6,8 @@ import {
   Wallet,
   TrendingUp,
   Search,
+  Download,
+  LoaderCircle,
 } from "lucide-react";
 import TransactionForm from "../components/TransactionForm";
 import { Transaction } from "../types";
@@ -37,8 +39,15 @@ export default function CashbookPage() {
   const [filterOption, setFilterOption] = useState<FilterOption>("newest");
 
   const navigate = useNavigate(); // Add navigation hook
-  // Replace storage utilities with BusinessContext
-  const { activeBusiness, transactions, customers, suppliers } = useBusiness();
+  const {
+    activeBusiness,
+    transactions,
+    customers,
+    suppliers,
+    isLoading,
+    exportTransactionsPDF,
+    isExportingTransactionsPDF,
+  } = useBusiness();
 
   const handleTransactionDetailClick = (transactionId: string) => {
     navigate(`/transactions/${transactionId}`);
@@ -163,6 +172,15 @@ export default function CashbookPage() {
     setIsTransactionModalOpen(false);
   };
 
+  const handleExportPDF = async () => {
+    try {
+      await exportTransactionsPDF();
+    } catch (error) {
+      // Handle error (you might want to show a toast or alert)
+      console.error("Failed to export PDF:", error);
+    }
+  };
+
   if (!activeBusiness) {
     return (
       <div className="max-w-md mx-auto p-4 text-center">
@@ -171,19 +189,33 @@ export default function CashbookPage() {
     );
   }
 
+  if (isLoading) {
+    return (
+      <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-900 items-center justify-center">
+        <p className="text-gray-600 dark:text-gray-200">
+          Loading transactions...
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
+    <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-900">
       {/* Fixed top section */}
-      <div className="flex-none bg-gray-50">
+      <div className="flex-none bg-gray-50 dark:bg-gray-900">
         <div className="max-w-md mx-auto p-4">
-          <h1 className="text-2xl font-bold mb-4">Cashbook</h1>
+          <h1 className="text-2xl font-bold mb-1 md:mb-3 dark:text-white">
+            Cashbook
+          </h1>
 
           {/* Summary Cards */}
-          <div className="grid grid-cols-2 gap-3 mb-3">
-            <div className="bg-white p-2 rounded-lg shadow-sm border border-gray-100">
+          <div className="grid grid-cols-2 gap-3 mb-2 md:mb-3">
+            <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
               <div className="flex items-center gap-1.5 mb-1">
-                <Wallet className="w-4 h-4 text-purple-600" />
-                <h3 className="text-sm text-gray-700">Cash in Hand</h3>
+                <Wallet className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                <h3 className="text-sm text-gray-700 dark:text-gray-300">
+                  Cash in Hand
+                </h3>
               </div>
               <p
                 className={`text-base font-semibold ${
@@ -194,10 +226,12 @@ export default function CashbookPage() {
               </p>
             </div>
 
-            <div className="bg-white p-3 rounded-lg shadow-sm border border-gray-100">
+            <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
               <div className="flex items-center gap-1.5 mb-1">
-                <TrendingUp className="w-4 h-4 text-purple-600" />
-                <h3 className="text-sm text-gray-700">Today's Summary</h3>
+                <TrendingUp className="w-4 h-4 text-purple-600 dark:text-purple-400" />
+                <h3 className="text-sm text-gray-700 dark:text-gray-300">
+                  Today's Summary
+                </h3>
               </div>
               <div className="flex gap-2 items-baseline">
                 <p
@@ -211,22 +245,22 @@ export default function CashbookPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 mb-3">
+          <div className="grid grid-cols-2 gap-3 mb-2 md:mb-3">
             <button
               onClick={() => handleTransactionClick("IN")}
-              className="flex items-center justify-center gap-2 py-2.5 px-4 bg-green-100 rounded-lg hover:bg-green-200 transition-colors"
+              className="flex items-center justify-center gap-2 py-2.5 px-4 bg-green-100 dark:bg-green-900/30 rounded-lg hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
             >
-              <ArrowDownCircle className="w-5 h-5 text-green-600" />
-              <span className="font-medium text-green-700 text-sm">
+              <ArrowDownCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
+              <span className="font-medium text-green-700 dark:text-green-400 text-sm">
                 Money IN
               </span>
             </button>
             <button
               onClick={() => handleTransactionClick("OUT")}
-              className="flex items-center justify-center gap-2 py-2.5 px-4 bg-red-100 rounded-lg hover:bg-red-200 transition-colors"
+              className="flex items-center justify-center gap-2 py-2.5 px-4 bg-red-100 dark:bg-red-900/30 rounded-lg hover:bg-red-200 dark:hover:bg-red-900/50 transition-colors"
             >
-              <ArrowUpCircle className="w-5 h-5 text-red-600" />
-              <span className="font-medium text-red-700 text-sm">
+              <ArrowUpCircle className="w-5 h-5 text-red-600 dark:text-red-400" />
+              <span className="font-medium text-red-700 dark:text-red-400 text-sm">
                 Money OUT
               </span>
             </button>
@@ -240,7 +274,7 @@ export default function CashbookPage() {
                 placeholder="Search transactions..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-2 text-md border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
+                className="w-full pl-12 pr-4 py-2 text-md border rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder-gray-400"
               />
               <Search
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
@@ -250,7 +284,7 @@ export default function CashbookPage() {
             <select
               value={filterOption}
               onChange={(e) => setFilterOption(e.target.value as FilterOption)}
-              className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 bg-white min-w-[120px]"
+              className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 bg-white dark:bg-gray-800 dark:border-gray-700 dark:text-white min-w-[120px]"
             >
               <optgroup label="Sort">
                 <option value="newest">Latest</option>
@@ -276,7 +310,7 @@ export default function CashbookPage() {
         } Transaction`}
       >
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-gray-700 mb-2 dark:text-gray-200">
             Transaction With
           </label>
           <div className="flex gap-4 mb-4">
@@ -321,30 +355,49 @@ export default function CashbookPage() {
       </Modal>
 
       {/* Sticky header */}
-      <div className="flex-none bg-gray-50 border-b border-gray-200 sticky top-0 z-10">
+      <div className="flex-none bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
         <div className="max-w-md mx-auto px-4 py-1">
-          <h2 className="text-lg font-semibold">Recent Transactions</h2>
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-semibold dark:text-white">
+              Recent Transactions
+            </h2>
+            <button
+              onClick={handleExportPDF}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-900/30 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isExportingTransactionsPDF ? (
+                <span className="inline-block animate-spin">
+                  <LoaderCircle className="w-4 h-4" />
+                </span>
+              ) : (
+                <Download className="w-4 h-4" />
+              )}
+              <span>
+                {isExportingTransactionsPDF ? "Exporting..." : "Export PDF"}
+              </span>
+            </button>
+          </div>
         </div>
       </div>
 
       {/* Scrollable transactions section */}
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-md mx-auto p-4 space-y-3 mb-16">
+        <div className="max-w-md mx-auto p-4 space-y-3">
           {groupedTransactions.length === 0 ? (
-            <p className="text-gray-500 text-center py-4">
+            <p className="text-gray-500 dark:text-gray-400 text-center py-4">
               No transactions found
             </p>
           ) : (
             groupedTransactions.map((group) => (
               <div key={group.date} className="space-y-1">
                 {/* Date header with new styling */}
-                <div className="bg-purple-50 rounded-lg p-2.5 border border-purple-100">
+                <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-2.5 border border-purple-100 dark:border-purple-800">
                   <div className="flex justify-between items-center">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-medium text-purple-900">
+                      <h3 className="font-medium text-purple-900 dark:text-purple-100">
                         {format(new Date(group.date), "dd MMM yyyy")}
                       </h3>
-                      <span className="text-xs px-2 py-0.5 bg-purple-100 rounded-full text-purple-700">
+                      <span className="text-xs px-2 py-0.5 bg-purple-100 dark:bg-purple-900/30 rounded-full text-purple-700 dark:text-purple-300">
                         {group.transactions.length} transactions
                       </span>
                     </div>
@@ -373,27 +426,27 @@ export default function CashbookPage() {
                     return (
                       <div
                         key={transaction.id}
-                        className="bg-white p-3 rounded-lg shadow-sm border border-gray-100"
+                        className="bg-white dark:bg-gray-800 p-3 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700"
                         onClick={() =>
                           handleTransactionDetailClick(transaction.id)
                         }
                       >
                         <div className="flex justify-between items-start">
                           <div>
-                            <p className="font-medium text-gray-900">
+                            <p className="font-medium text-gray-900 dark:text-white">
                               {entityName}
                             </p>
-                            <p className="text-xs text-gray-500 mt-0.5">
+                            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
                               {transaction.customerId ? "Customer" : "Supplier"}
                             </p>
                             {transaction.description && (
-                              <p className="text-sm text-gray-600 mt-0.5">
+                              <p className="text-sm text-gray-600 dark:text-gray-400 mt-0.5">
                                 {transaction.description.length > 25
                                   ? `${transaction.description.slice(0, 25)}..`
                                   : transaction.description}
                               </p>
                             )}
-                            <div className="text-xs text-gray-500 mt-1 flex items-center gap-1">
+                            <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 flex items-center gap-1">
                               <span>{format(transactionDate, "h:mm a")}</span>
                               <span className="text-gray-400">•</span>
                               <span>

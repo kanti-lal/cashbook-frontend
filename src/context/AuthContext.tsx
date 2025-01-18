@@ -8,8 +8,11 @@ import {
 } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { authApi, RegisterData, UpdateProfileData } from "../api/auth";
+import axios, { AxiosError, AxiosResponse } from "axios";
 
 const USER_KEY = "auth_user";
+// const ACTIVE_BUSINESS_KEY = "activeBusiness";
+const AUTH_TOKEN_KEY = "auth_token";
 
 interface User {
   id: number;
@@ -54,6 +57,40 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return !!token;
   });
 
+  // Add this function to check token validity
+  const checkAuthStatus = () => {
+    const token = localStorage.getItem(AUTH_TOKEN_KEY);
+    if (!token) {
+      setIsAuthenticated(false);
+      setUser(null);
+      queryClient.clear();
+      return false;
+    }
+    return true;
+  };
+
+  // Modify useEffect to use the check function
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
+  // Add interceptor to handle 401 errors
+  useEffect(() => {
+    const interceptor = axios.interceptors.response.use(
+      (response: AxiosResponse) => response,
+      (error: AxiosError) => {
+        if (error.response?.status === 401) {
+          logout();
+        }
+        return Promise.reject(error);
+      }
+    );
+
+    return () => {
+      axios.interceptors.response.eject(interceptor);
+    };
+  }, []);
+
   const loginMutation = useMutation({
     mutationFn: authApi.login,
     onSuccess: (user) => {
@@ -65,8 +102,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const registerMutation = useMutation({
     mutationFn: authApi.register,
-    onSuccess: (user) => {
-      setUser(user);
+    onSuccess: (user: any) => {
+      setUser(user?.user);
       setIsAuthenticated(true);
       localStorage.setItem(USER_KEY, JSON.stringify(user));
     },
@@ -82,11 +119,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   });
 
   const forgotPasswordMutation = useMutation({
-    mutationFn: authApi.forgotPassword,
+    mutationFn: (email: string) => authApi.forgotPassword(email),
   });
 
   const resetPasswordMutation = useMutation({
-    mutationFn: authApi.resetPassword,
+    mutationFn: ({ token, password }: { token: string; password: string }) =>
+      authApi.resetPassword(token, password),
   });
 
   const updatePasswordMutation = useMutation({
@@ -115,7 +153,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const forgotPassword = async (email: string) => {
-    await forgotPasswordMutation.mutateAsync({ email });
+    await forgotPasswordMutation.mutateAsync(email);
   };
 
   const resetPassword = async (token: string, password: string) => {
@@ -129,10 +167,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await updatePasswordMutation.mutateAsync({ currentPassword, newPassword });
   };
 
-  const logout = () => {
-    authApi.logout();
-    localStorage.removeItem(USER_KEY);
-    queryClient.removeQueries({ queryKey: ["user"] });
+  const logout = async () => {
+    await authApi.logout();
+    // localStorage.removeItem(USER_KEY);
+    // localStorage.removeItem(AUTH_TOKEN_KEY);
+    // localStorage.removeItem("activeBusiness");
+    localStorage.clear();
+    queryClient.clear();
     setUser(null);
     setIsAuthenticated(false);
   };
