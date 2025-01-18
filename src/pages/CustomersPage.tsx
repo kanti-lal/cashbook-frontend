@@ -108,7 +108,7 @@ export default function CustomersPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto p-4 pb-20 dark:bg-gray-900">
+    <div className="max-w-md md:max-w-4xl mx-auto p-4 pb-20 dark:bg-gray-900">
       <div className="flex justify-between items-center mb-4">
         <h1 className="text-2xl font-bold dark:text-white">Customers</h1>
         <button

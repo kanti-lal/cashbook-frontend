@@ -83,7 +83,7 @@ export default function TransactionDetailPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4 dark:bg-gray-900">
+    <div className="max-w-md md:max-w-4xl mx-auto p-4 dark:bg-gray-900">
       <div className="flex items-center gap-2 mb-4">
         <CircleArrowLeft
           className="hover:cursor-pointer mt-1 dark:text-gray-200"

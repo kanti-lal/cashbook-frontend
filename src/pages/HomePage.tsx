@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Plus, Store, CheckCircle, BookOpen, Contact } from "lucide-react";
 import { useBusiness } from "../context/BusinessContext";
 import { Business } from "../api/types";
+import Modal from "../components/Modal";
 
 export default function HomePage() {
   const [showAddForm, setShowAddForm] = useState(false);
@@ -50,7 +51,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="max-w-md mx-auto p-4 pb-20 dark:bg-gray-900">
+    <div className="max-w-md md:max-w-4xl mx-auto p-4 pb-20 dark:bg-gray-900">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-2xl font-bold dark:text-white">My Businesses</h1>
         <button
@@ -101,7 +102,7 @@ export default function HomePage() {
         </div>
       )}
 
-      {showAddForm && (
+      {/* {showAddForm && (
         <div className="mb-6 bg-white dark:bg-gray-800 p-4 rounded-lg shadow">
           <h2 className="text-lg font-semibold mb-4 dark:text-white">
             Create New Business
@@ -141,7 +142,47 @@ export default function HomePage() {
             </div>
           </form>
         </div>
-      )}
+      )} */}
+      <Modal
+        isOpen={showAddForm}
+        onClose={() => setShowAddForm(false)}
+        title="Create New Business"
+      >
+        <form onSubmit={handleCreateBusiness} className="space-y-4">
+          <div>
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Business Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              value={newBusinessName}
+              onChange={(e) => setNewBusinessName(e.target.value)}
+              placeholder="Enter business name"
+              className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-purple-500 focus:ring-purple-500 dark:bg-gray-700 dark:text-white p-2 border"
+              required
+            />
+          </div>
+          <div className="flex gap-2">
+            <button
+              type="submit"
+              className="flex-1 bg-purple-600 dark:bg-purple-700 text-white py-2 px-4 rounded-md hover:bg-purple-700 dark:hover:bg-purple-800 transition-colors"
+            >
+              Create
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowAddForm(false)}
+              className="flex-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 py-2 px-4 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            >
+              Cancel
+            </button>
+          </div>
+        </form>
+      </Modal>
 
       <div className="space-y-2">
         {businesses.length === 0 ? (

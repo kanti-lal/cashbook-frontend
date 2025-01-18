@@ -183,7 +183,7 @@ export default function CashbookPage() {
 
   if (!activeBusiness) {
     return (
-      <div className="max-w-md mx-auto p-4 text-center">
+      <div className="max-w-md md:max-w-4xl mx-auto p-4 text-center">
         <p className="text-gray-600">Please select a business first</p>
       </div>
     );
@@ -203,7 +203,7 @@ export default function CashbookPage() {
     <div className="flex flex-col h-screen bg-gray-50 dark:bg-gray-900">
       {/* Fixed top section */}
       <div className="flex-none bg-gray-50 dark:bg-gray-900">
-        <div className="max-w-md mx-auto p-4">
+        <div className="max-w-md md:max-w-4xl mx-auto p-4">
           <h1 className="text-2xl font-bold mb-1 md:mb-3 dark:text-white">
             Cashbook
           </h1>
@@ -356,7 +356,7 @@ export default function CashbookPage() {
 
       {/* Sticky header */}
       <div className="flex-none bg-gray-50 dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-10">
-        <div className="max-w-md mx-auto px-4 py-1">
+        <div className="max-w-md md:max-w-4xl mx-auto px-4 py-1">
           <div className="flex justify-between items-center">
             <h2 className="text-lg font-semibold dark:text-white">
               Recent Transactions
@@ -381,8 +381,8 @@ export default function CashbookPage() {
       </div>
 
       {/* Scrollable transactions section */}
-      <div className="flex-1 overflow-y-auto">
-        <div className="max-w-md mx-auto p-4 space-y-3">
+      <div className="flex-1 overflow-y-auto max-w-md md:max-w-4xl mx-auto w-full">
+        <div className="max-w-md md:max-w-4xl mx-auto p-4 space-y-3">
           {groupedTransactions.length === 0 ? (
             <p className="text-gray-500 dark:text-gray-400 text-center py-4">
               No transactions found
