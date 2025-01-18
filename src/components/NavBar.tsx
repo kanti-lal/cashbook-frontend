@@ -22,10 +22,10 @@ export default function NavBar() {
     }
 
     // Desktop styles
-    return `flex items-center gap-3 px-4 py-3 w-full ${
+    return `flex items-center gap-3 px-4 py-3 w-full transition-all duration-200 ${
       isActive
-        ? "bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400"
-        : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800"
+        ? "bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 border-l-4 border-purple-500 font-medium"
+        : "text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-purple-500 dark:hover:text-purple-400"
     }`;
   };
 
@@ -67,31 +67,31 @@ export default function NavBar() {
 
   // Desktop layout
   return (
-    <nav className="w-64 h-full bg-white dark:bg-gray-800 border-r dark:border-gray-700 fixed left-0 top-14">
-      <div className="flex flex-col py-4">
+    <nav className="w-64 h-full bg-white dark:bg-gray-800 border-r dark:border-gray-700 fixed left-0 top-14 shadow-sm">
+      <div className="flex flex-col py-6 space-y-2">
         <Link to="/" className={getNavItemClass("/")}>
-          <Home size={20} />
-          <span>Home</span>
+          <Home size={20} className="min-w-[20px]" />
+          <span className="font-medium">Home</span>
         </Link>
 
         <Link to="/cashbook" className={getNavItemClass("/cashbook")}>
-          <BookOpen size={20} />
-          <span>Cashbook</span>
+          <BookOpen size={20} className="min-w-[20px]" />
+          <span className="font-medium">Cashbook</span>
         </Link>
 
         <Link to="/customers" className={getNavItemClass("/customers")}>
-          <Users size={20} />
-          <span>Customers</span>
+          <Users size={20} className="min-w-[20px]" />
+          <span className="font-medium">Customers</span>
         </Link>
 
         <Link to="/suppliers" className={getNavItemClass("/suppliers")}>
-          <Truck size={20} />
-          <span>Suppliers</span>
+          <Truck size={20} className="min-w-[20px]" />
+          <span className="font-medium">Suppliers</span>
         </Link>
 
         <Link to="/analytics" className={getNavItemClass("/analytics")}>
-          <TrendingUp size={20} />
-          <span>Analytics</span>
+          <TrendingUp size={20} className="min-w-[20px]" />
+          <span className="font-medium">Analytics</span>
         </Link>
       </div>
     </nav>
