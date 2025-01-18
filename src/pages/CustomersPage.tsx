@@ -159,13 +159,19 @@ export default function CustomersPage() {
 
       {/* Balance Summary */}
       <div className="grid grid-cols-2 gap-4 mb-6">
-        <div className="bg-green-50 p-4 rounded-lg">
-          <p className="text-sm text-green-800">You Will Give</p>
-          <p className="text-lg font-semibold text-green-600">₹{totalToGive}</p>
+        <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 p-4 rounded-lg">
+          <p className="text-sm text-green-800 dark:text-green-200">
+            You Will Give
+          </p>
+          <p className="text-lg font-semibold text-green-600 dark:text-green-400">
+            ₹{totalToGive}
+          </p>
         </div>
-        <div className="bg-red-50 p-4 rounded-lg">
-          <p className="text-sm text-red-800">You Will Get</p>
-          <p className="text-lg font-semibold text-red-600">₹{totalToGet}</p>
+        <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900 dark:to-red-800 p-4 rounded-lg">
+          <p className="text-sm text-red-800 dark:text-red-200">You Will Get</p>
+          <p className="text-lg font-semibold text-red-600 dark:text-red-400">
+            ₹{totalToGet}
+          </p>
         </div>
       </div>
 

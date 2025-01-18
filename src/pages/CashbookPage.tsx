@@ -248,7 +248,7 @@ export default function CashbookPage() {
           <div className="grid grid-cols-2 gap-3 mb-2 md:mb-3">
             <button
               onClick={() => handleTransactionClick("IN")}
-              className="flex items-center justify-center gap-2 py-2.5 px-4 bg-green-100 dark:bg-green-900/30 rounded-lg hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
+              className="flex items-center justify-center gap-2 py-2.5 md:py-3 px-4 bg-green-100 dark:bg-green-900/30 rounded-lg hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"
             >
               <ArrowDownCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
               <span className="font-medium text-green-700 dark:text-green-400 text-sm">

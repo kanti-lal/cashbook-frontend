@@ -71,7 +71,7 @@ export default function HomePage() {
             className="
               flex items-center justify-center 
               bg-purple-600 text-white 
-              py-2 px-4 rounded-lg 
+              py-2 md:py-3 px-4 rounded-lg 
               hover:bg-purple-700 
               dark:bg-purple-700 dark:hover:bg-purple-800
               transition-colors
