@@ -28,13 +28,13 @@ export default function ProfilePage() {
   );
 
   return (
-    <div className="max-w-md mx-auto p-4 sm:p-6 lg:p-8  min-h-screen">
+    <div className="max-w-md md:max-w-4xl mx-auto p-4 sm:p-6 lg:p-8 min-h-screen">
       <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
         {/* Header */}
-        <div className="relative h-[80px] bg-gradient-to-r from-purple-500 to-purple-600">
-          <div className="absolute -bottom-8 left-6">
-            <div className="w-[80px] h-[80px] rounded-full border-4 border-white bg-white shadow-lg flex items-center justify-center">
-              <span className="text-5xl font-semibold text-purple-500">
+        <div className="relative h-[120px] md:h-[200px] bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700">
+          <div className="absolute -bottom-12 md:-bottom-16 left-6 md:left-12">
+            <div className="w-[100px] h-[100px] md:w-[140px] md:h-[140px] rounded-full border-4 border-white bg-white shadow-lg flex items-center justify-center">
+              <span className="text-5xl md:text-7xl font-semibold text-purple-500">
                 {profile?.name.charAt(0).toUpperCase()}
               </span>
             </div>
@@ -42,22 +42,24 @@ export default function ProfilePage() {
         </div>
 
         {/* Content */}
-        <div className="pt-12 px-4 pb-2 overflow-auto">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">
-              {profile?.name}
-            </h1>
+        <div className="pt-16 md:pt-24 px-4 md:px-12 pb-8">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-8 md:mb-12">
+            <div>
+              <h1 className="text-2xl md:text-4xl font-bold text-gray-900 mb-2">
+                {profile?.name}
+              </h1>
+              <p className="text-purple-600 font-medium">{profile?.email}</p>
+            </div>
             <button
               onClick={() => navigate("/profile/edit")}
-              className="flex items-center space-x-2 px-4 py-2 rounded-lg bg-purple-50 text-purple-600 hover:bg-purple-100 transition-colors"
+              className="mt-4 md:mt-0 flex items-center space-x-2 px-6 py-3 rounded-lg bg-purple-50 text-purple-600 hover:bg-purple-100 transition-colors duration-200 hover:shadow-md"
             >
               <Edit2 className="w-4 h-4" />
               <span>Edit Profile</span>
             </button>
           </div>
 
-          <div className="grid grid-cols-1  gap-4">
-            <ProfileItem icon={Mail} label="Email" value={profile?.email} />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
             <ProfileItem
               icon={Phone}
               label="Mobile"

@@ -138,7 +138,7 @@ export default function SupplierDetailPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto p-4 pb-20 dark:bg-gray-900">
+    <div className="max-w-md md:max-w-4xl mx-auto p-4 pb-20 dark:bg-gray-900">
       <div className="flex items-center gap-2 mb-4">
         <button onClick={() => navigate(-1)}>
           <CircleArrowLeft
@@ -307,7 +307,7 @@ export default function SupplierDetailPage() {
               <div className="bg-purple-50 dark:bg-purple-900/20 rounded-lg p-2.5 border border-purple-100 dark:border-purple-900/50">
                 <div className="flex justify-between items-center">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-medium text-purple-900 dark:text-purple-100">
+                    <h3 className="font-medium text-purple-900 dark:text-purple-100 text-sm md:text-base">
                       {format(new Date(group.date), "dd MMM yyyy")}
                     </h3>
                     <span className="text-xs px-2 py-0.5 bg-purple-100 dark:bg-purple-900/50 rounded-full text-purple-700 dark:text-purple-300">

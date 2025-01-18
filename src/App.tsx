@@ -12,6 +12,7 @@ import { ThemeProvider } from "./context/ThemeContext";
 import BusinessSelector from "./components/BusinessSelector";
 import NavBar from "./components/NavBar";
 import "./index.css";
+import { useIsMobile } from "./hooks/useBreakpoint";
 
 // Lazy load all pages
 const LoginPage = lazy(() => import("./pages/LoginPage"));
@@ -47,15 +48,30 @@ function LoadingSpinner() {
 }
 
 function ProtectedLayout({ children }: { children: React.ReactNode }) {
+  const isMobile = useIsMobile();
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
       <BusinessSelector />
-      <main className="flex-1 max-w-md w-full mx-auto px-0 pt-12 pb-16">
-        <Suspense fallback={<LoadingSpinner />}>{children}</Suspense>
-      </main>
-      <div className="fixed bottom-0 left-0 right-0 z-10">
-        <NavBar />
-      </div>
+      {!isMobile ? (
+        // Desktop Layout
+        <div className="flex flex-1">
+          <NavBar />
+          <main className="flex-1 ml-64 px-8 py-6 mt-6">
+            <Suspense fallback={<LoadingSpinner />}>{children}</Suspense>
+          </main>
+        </div>
+      ) : (
+        // Mobile Layout (unchanged)
+        <>
+          <main className="flex-1 max-w-md w-full mx-auto px-0 pt-12 pb-16">
+            <Suspense fallback={<LoadingSpinner />}>{children}</Suspense>
+          </main>
+          <div className="fixed bottom-0 left-0 right-0 z-10">
+            <NavBar />
+          </div>
+        </>
+      )}
     </div>
   );
 }

@@ -131,7 +131,7 @@ export default function ReportView({
         <select
           value={dateFilter}
           onChange={(e) => setDateFilter(e.target.value as DateFilter)}
-          className="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500"
+          className="flex-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 dark:bg-gray-800 dark:text-white"
         >
           <option value="all">All Time</option>
           <option value="lastWeek">Last Week</option>
@@ -159,19 +159,27 @@ export default function ReportView({
 
       {/* Summary for filtered transactions */}
       <div className="grid grid-cols-2 gap-4 my-4">
-        <div className="bg-green-50 p-3 rounded-lg">
+        <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 p-3 rounded-lg">
           <div className="flex items-center gap-2">
-            <ArrowDownCircle className="w-4 h-4 text-green-600" />
-            <span className="text-sm text-green-800">Total In</span>
+            <ArrowDownCircle className="w-4 h-4 text-green-600 dark:text-green-400" />
+            <span className="text-sm text-green-800 dark:text-green-200">
+              Total In
+            </span>
           </div>
-          <p className="text-lg font-semibold text-green-600">₹{totalIn}</p>
+          <p className="text-lg font-semibold text-green-600 dark:text-green-400">
+            ₹{totalIn}
+          </p>
         </div>
-        <div className="bg-red-50 p-3 rounded-lg">
+        <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900 dark:to-red-800 p-3 rounded-lg">
           <div className="flex items-center gap-2">
-            <ArrowUpCircle className="w-4 h-4 text-red-600" />
-            <span className="text-sm text-red-800">Total Out</span>
+            <ArrowUpCircle className="w-4 h-4 text-red-600 dark:text-red-400" />
+            <span className="text-sm text-red-800 dark:text-red-200">
+              Total Out
+            </span>
           </div>
-          <p className="text-lg font-semibold text-red-600">₹{totalOut}</p>
+          <p className="text-lg font-semibold text-red-600 dark:text-red-400">
+            ₹{totalOut}
+          </p>
         </div>
       </div>
 
@@ -185,18 +193,18 @@ export default function ReportView({
           filteredTransactions.map((transaction) => (
             <div
               key={transaction.id}
-              className="bg-white p-4 rounded-lg shadow-sm border border-gray-100"
+              className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700"
             >
               <div className="flex justify-between items-start">
                 <div>
-                  <p className="font-medium">
+                  <p className="font-medium text-gray-800 dark:text-gray-200">
                     {
                       entityNames[
                         transaction.customerId || transaction.supplierId || ""
                       ]
                     }
                   </p>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
                     {transaction.description || "No description"}
                   </p>
                   <p className="text-xs text-gray-500">

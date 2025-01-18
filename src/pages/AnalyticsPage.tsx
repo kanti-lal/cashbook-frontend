@@ -14,6 +14,7 @@ import {
 import { format, parse } from "date-fns";
 import { useState } from "react";
 import { useBusiness } from "../context/BusinessContext";
+import { useTheme } from "../context/ThemeContext";
 
 ChartJS.register(
   CategoryScale,
@@ -32,6 +33,7 @@ type ChartType = "bar" | "line";
 export default function AnalyticsPage() {
   const [cashFlowChartType, setCashFlowChartType] = useState<ChartType>("bar");
   const { activeBusiness, transactions, getBusinessAnalytics } = useBusiness();
+  const { theme } = useTheme();
 
   if (!activeBusiness) {
     return (
@@ -111,33 +113,39 @@ export default function AnalyticsPage() {
       legend: {
         position: "top" as const,
         labels: {
-          color: "rgb(var(--foreground-rgb))",
+          color: theme === "dark" ? "#ffffff" : "#000000",
         },
       },
       title: {
         display: true,
         text: "Monthly Cash Flow",
-        color: "rgb(var(--foreground-rgb))",
+        color: theme === "dark" ? "#ffffff" : "#000000",
       },
     },
     scales: {
       x: {
         stacked: false,
         grid: {
-          color: "rgba(var(--foreground-rgb), 0.1)",
+          color:
+            theme === "dark"
+              ? "rgba(255, 255, 255, 0.1)"
+              : "rgba(0, 0, 0, 0.1)",
         },
         ticks: {
-          color: "rgb(var(--foreground-rgb))",
+          color: theme === "dark" ? "#ffffff" : "#000000",
         },
       },
       y: {
         stacked: false,
         beginAtZero: true,
         grid: {
-          color: "rgba(var(--foreground-rgb), 0.1)",
+          color:
+            theme === "dark"
+              ? "rgba(255, 255, 255, 0.1)"
+              : "rgba(0, 0, 0, 0.1)",
         },
         ticks: {
-          color: "rgb(var(--foreground-rgb))",
+          color: theme === "dark" ? "#ffffff" : "#000000",
         },
       },
     },
@@ -162,132 +170,328 @@ export default function AnalyticsPage() {
       legend: {
         position: "top" as const,
         labels: {
-          color: "rgb(var(--foreground-rgb))",
+          color: theme === "dark" ? "#ffffff" : "#000000",
         },
       },
       title: {
         display: true,
         text: "Overall Distribution",
-        color: "rgb(var(--foreground-rgb))",
+        color: theme === "dark" ? "#ffffff" : "#000000",
       },
     },
     cutout: "60%",
   };
 
   return (
-    <div className="max-w-md mx-auto p-4 pb-20 dark:bg-gray-900">
-      <h1 className="text-2xl font-bold dark:text-white mb-6">Analytics</h1>
+    <div className="mx-auto p-4 pb-20 dark:bg-gray-900">
+      {/* Mobile Layout */}
+      <div className="md:hidden">
+        <h1 className="text-2xl font-bold dark:text-white mb-6">Analytics</h1>
 
-      <div className="grid grid-cols-3 gap-4 mb-8">
-        <div className="bg-green-100 dark:bg-green-900 p-4 rounded-lg">
-          <h3 className="text-sm text-green-800 dark:text-green-200 font-medium">
-            Total In
-          </h3>
-          <p className="text-xl text-green-600 dark:text-green-400 font-bold">
-            ₹{totalIn}
-          </p>
-        </div>
-        <div className="bg-red-100 dark:bg-red-900 p-4 rounded-lg">
-          <h3 className="text-sm text-red-800 dark:text-red-200 font-medium">
-            Total Out
-          </h3>
-          <p className="text-xl text-red-600 dark:text-red-400 font-bold">
-            ₹{totalOut}
-          </p>
-        </div>
-        <div className="bg-purple-100 dark:bg-purple-900 p-4 rounded-lg">
-          <h3 className="text-sm text-purple-800 dark:text-purple-200 font-medium">
-            Balance
-          </h3>
-          <p className="text-xl text-purple-600 dark:text-purple-400 font-bold">
-            ₹{balance}
-          </p>
-        </div>
-      </div>
+        {/* Mobile Stats Cards */}
+        <div className="grid grid-cols-3 gap-2 mb-6">
+          <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 p-2 rounded-xl">
+            <h3 className="text-[10px] text-green-800 dark:text-green-200">
+              Total Income
+            </h3>
+            <p className="text-sm font-bold text-green-600 dark:text-green-400 mt-0.5">
+              ₹{totalIn.toLocaleString()}
+            </p>
+          </div>
 
-      {/* Chart Type Toggle */}
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow mb-8">
-        <div className="flex justify-center gap-4 mb-4">
+          <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900 dark:to-red-800 p-2 rounded-xl">
+            <h3 className="text-[10px] text-red-800 dark:text-red-200">
+              Total Expenses
+            </h3>
+            <p className="text-sm font-bold text-red-600 dark:text-red-400 mt-0.5">
+              ₹{totalOut.toLocaleString()}
+            </p>
+          </div>
+
+          <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 p-2 rounded-xl">
+            <h3 className="text-[10px] text-purple-800 dark:text-purple-200">
+              Net Balance
+            </h3>
+            <p className="text-sm font-bold text-purple-600 dark:text-purple-400 mt-0.5">
+              ₹{balance.toLocaleString()}
+            </p>
+          </div>
+        </div>
+
+        {/* Mobile Chart Type Toggle */}
+        <div className="flex gap-2 mb-4">
           <button
             onClick={() => setCashFlowChartType("bar")}
-            className={`px-4 py-2 rounded-md ${
+            className={`flex-1 py-2 px-3 text-sm rounded-lg transition-all ${
               cashFlowChartType === "bar"
                 ? "bg-purple-600 text-white"
-                : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
             }`}
           >
             Bar Chart
           </button>
           <button
             onClick={() => setCashFlowChartType("line")}
-            className={`px-4 py-2 rounded-md ${
+            className={`flex-1 py-2 px-3 text-sm rounded-lg transition-all ${
               cashFlowChartType === "line"
                 ? "bg-purple-600 text-white"
-                : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+                : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
             }`}
           >
             Line Chart
           </button>
         </div>
 
-        {cashFlowChartType === "bar" ? (
-          <Bar options={chartOptions} data={barChartData} />
-        ) : (
-          <Line options={chartOptions} data={lineChartData} />
-        )}
-      </div>
-
-      {/* Doughnut Chart */}
-      <div className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow mb-8">
-        <Doughnut options={doughnutChartOptions} data={doughnutChartData} />
-      </div>
-
-      <div className="space-y-4">
-        <h2 className="text-lg font-semibold dark:text-white">
-          Monthly Breakdown
-        </h2>
-        {analyticsData.map((month) => (
-          <div
-            key={month.month}
-            className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-sm"
-          >
-            <h3 className="font-medium dark:text-white mb-2">
-              {format(parse(month.month, "yyyy-MM", new Date()), "MMMM yyyy")}
-            </h3>
-            <div className="grid grid-cols-3 gap-2 text-sm">
-              <div>
-                <p className="text-gray-600 dark:text-gray-400">In</p>
-                <p className="text-green-600 dark:text-green-400 font-medium">
-                  ₹{month.totalIn}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-600 dark:text-gray-400">Out</p>
-                <p className="text-red-600 dark:text-red-400 font-medium">
-                  ₹{month.totalOut}
-                </p>
-              </div>
-              <div>
-                <p className="text-gray-600 dark:text-gray-400">Balance</p>
-                <p
-                  className={`font-medium ${
-                    month.balance >= 0
-                      ? "text-green-600 dark:text-green-400"
-                      : "text-red-600 dark:text-red-400"
-                  }`}
-                >
-                  ₹{Math.abs(month.balance)}
-                </p>
-              </div>
-            </div>
+        {/* Mobile Charts */}
+        <div className="space-y-6">
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow">
+            {cashFlowChartType === "bar" ? (
+              <Bar options={chartOptions} data={barChartData} />
+            ) : (
+              <Line options={chartOptions} data={lineChartData} />
+            )}
           </div>
-        ))}
+
+          <div className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow">
+            <Doughnut options={doughnutChartOptions} data={doughnutChartData} />
+          </div>
+        </div>
+
+        {/* Mobile Monthly Breakdown */}
+        <div className="mt-6 bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden">
+          <h2 className="text-[14px] font-semibold p-3 dark:text-white border-b dark:border-gray-700">
+            Monthly Breakdown
+          </h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-[11px]">
+              <thead>
+                <tr className="border-b dark:border-gray-700">
+                  <th className="text-left p-2 dark:text-gray-300">Month</th>
+                  <th className="text-right p-2 dark:text-gray-300">In</th>
+                  <th className="text-right p-2 dark:text-gray-300">Out</th>
+                  <th className="text-right p-2 dark:text-gray-300">Balance</th>
+                </tr>
+              </thead>
+              <tbody>
+                {analyticsData.map((month) => (
+                  <tr
+                    key={month.month}
+                    className="border-b dark:border-gray-700"
+                  >
+                    <td className="p-2 dark:text-gray-300">
+                      {format(
+                        parse(month.month, "yyyy-MM", new Date()),
+                        "MMM yy"
+                      )}
+                    </td>
+                    <td className="p-2 text-right text-green-600 dark:text-green-400">
+                      ₹{month.totalIn.toLocaleString()}
+                    </td>
+                    <td className="p-2 text-right text-red-600 dark:text-red-400">
+                      ₹{month.totalOut.toLocaleString()}
+                    </td>
+                    <td
+                      className={`p-2 text-right ${
+                        month.balance >= 0
+                          ? "text-green-600 dark:text-green-400"
+                          : "text-red-600 dark:text-red-400"
+                      }`}
+                    >
+                      ₹{Math.abs(month.balance).toLocaleString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
 
-      {/* <EnhancedAnalyticsCharts
-        transactions={transactions}
-        analyticsData={analyticsData}
-      /> */}
+      {/* Desktop Layout (unchanged) */}
+      <div className="hidden md:block max-w-4xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold dark:text-white">
+            Business Analytics Dashboard
+          </h1>
+          <div className="flex gap-4">
+            <button
+              onClick={() => setCashFlowChartType("bar")}
+              className={`px-6 py-2 rounded-full transition-all ${
+                cashFlowChartType === "bar"
+                  ? "bg-purple-600 text-white shadow-lg shadow-purple-200 dark:shadow-purple-900/30"
+                  : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+              }`}
+            >
+              Bar Chart
+            </button>
+            <button
+              onClick={() => setCashFlowChartType("line")}
+              className={`px-6 py-2 rounded-full transition-all ${
+                cashFlowChartType === "line"
+                  ? "bg-purple-600 text-white shadow-lg shadow-purple-200 dark:shadow-purple-900/30"
+                  : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
+              }`}
+            >
+              Line Chart
+            </button>
+          </div>
+        </div>
+
+        {/* Stats Cards */}
+        <div className="grid grid-cols-3 gap-6 mb-8">
+          <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 p-6 rounded-2xl shadow-lg">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg text-green-800 dark:text-green-200 font-medium">
+                Total Income
+              </h3>
+              <span className="p-2 bg-green-200 dark:bg-green-700 rounded-lg">
+                <svg
+                  className="w-6 h-6 text-green-700 dark:text-green-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 4v16m8-8H4"
+                  />
+                </svg>
+              </span>
+            </div>
+            <p className="text-3xl font-bold text-green-600 dark:text-green-400 mt-4">
+              ₹{totalIn.toLocaleString()}
+            </p>
+          </div>
+
+          <div className="bg-gradient-to-br from-red-50 to-red-100 dark:from-red-900 dark:to-red-800 p-6 rounded-2xl shadow-lg">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg text-red-800 dark:text-red-200 font-medium">
+                Total Expenses
+              </h3>
+              <span className="p-2 bg-red-200 dark:bg-red-700 rounded-lg">
+                <svg
+                  className="w-6 h-6 text-red-700 dark:text-red-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M20 12H4"
+                  />
+                </svg>
+              </span>
+            </div>
+            <p className="text-3xl font-bold text-red-600 dark:text-red-400 mt-4">
+              ₹{totalOut.toLocaleString()}
+            </p>
+          </div>
+
+          <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900 dark:to-purple-800 p-6 rounded-2xl shadow-lg">
+            <div className="flex items-center justify-between">
+              <h3 className="text-lg text-purple-800 dark:text-purple-200 font-medium">
+                Net Balance
+              </h3>
+              <span className="p-2 bg-purple-200 dark:bg-purple-700 rounded-lg">
+                <svg
+                  className="w-6 h-6 text-purple-700 dark:text-purple-300"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  />
+                </svg>
+              </span>
+            </div>
+            <p className="text-3xl font-bold text-purple-600 dark:text-purple-400 mt-4">
+              ₹{balance.toLocaleString()}
+            </p>
+          </div>
+        </div>
+
+        {/* Charts Grid */}
+        <div className="grid grid-cols-3 gap-6 mb-8">
+          {/* Main Chart */}
+          <div className="col-span-2 bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+            {cashFlowChartType === "bar" ? (
+              <Bar options={chartOptions} data={barChartData} />
+            ) : (
+              <Line options={chartOptions} data={lineChartData} />
+            )}
+          </div>
+
+          {/* Doughnut Chart */}
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-lg">
+            <Doughnut options={doughnutChartOptions} data={doughnutChartData} />
+          </div>
+        </div>
+
+        {/* Monthly Breakdown Table */}
+        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6">
+          <h2 className="text-xl font-semibold dark:text-white mb-4">
+            Monthly Breakdown
+          </h2>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b dark:border-gray-700">
+                  <th className="text-left py-3 px-4 dark:text-gray-300">
+                    Month
+                  </th>
+                  <th className="text-right py-3 px-4 dark:text-gray-300">
+                    Income
+                  </th>
+                  <th className="text-right py-3 px-4 dark:text-gray-300">
+                    Expenses
+                  </th>
+                  <th className="text-right py-3 px-4 dark:text-gray-300">
+                    Balance
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {analyticsData.map((month) => (
+                  <tr
+                    key={month.month}
+                    className="border-b dark:border-gray-700"
+                  >
+                    <td className="py-3 px-4 dark:text-gray-300">
+                      {format(
+                        parse(month.month, "yyyy-MM", new Date()),
+                        "MMMM yyyy"
+                      )}
+                    </td>
+                    <td className="text-right py-3 px-4 text-green-600 dark:text-green-400">
+                      ₹{month.totalIn.toLocaleString()}
+                    </td>
+                    <td className="text-right py-3 px-4 text-red-600 dark:text-red-400">
+                      ₹{month.totalOut.toLocaleString()}
+                    </td>
+                    <td
+                      className={`text-right py-3 px-4 ${
+                        month.balance >= 0
+                          ? "text-green-600 dark:text-green-400"
+                          : "text-red-600 dark:text-red-400"
+                      }`}
+                    >
+                      ₹{Math.abs(month.balance).toLocaleString()}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

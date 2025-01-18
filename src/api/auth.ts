@@ -39,6 +39,7 @@ export interface UpdateProfileData {
   mobile?: string;
   address?: string;
   dateOfBirth?: string;
+  email?: string;
 }
 
 interface ForgotPasswordData {
