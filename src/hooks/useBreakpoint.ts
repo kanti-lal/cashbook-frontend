@@ -4,8 +4,21 @@ import { breakpoints } from "../config/breakpoints";
 type Breakpoint = keyof typeof breakpoints;
 
 // Individual media query hooks
-export const useIsMobile = () =>
-  useMediaQuery(`(max-width: ${breakpoints.md}px)`);
+export const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return isMobile;
+};
+
 export const useIsTablet = () =>
   useMediaQuery(
     `(min-width: ${breakpoints.md + 1}px) and (max-width: ${breakpoints.lg}px)`

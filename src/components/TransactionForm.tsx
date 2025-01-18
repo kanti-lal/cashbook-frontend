@@ -150,6 +150,7 @@ export default function TransactionForm({
         <input
           type="number"
           id="amount"
+          inputMode="decimal"
           placeholder="Enter amount"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
