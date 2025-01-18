@@ -119,7 +119,9 @@ export const authApi = {
 
   // Logout (client-side only)
   logout: () => {
-    localStorage.removeItem("auth_token");
+    // localStorage.removeItem("auth_token");
+    // localStorage.removeItem("activeBusiness");
+    localStorage.clear();
   },
 };
 

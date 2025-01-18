@@ -145,6 +145,13 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setActiveBusiness(null);
+      localStorageUtils.setActiveBusiness(null);
+    }
+  }, [isAuthenticated]);
+
   // Queries
   const {
     data: businesses = [],
@@ -251,7 +258,17 @@ export function BusinessProvider({ children }: { children: ReactNode }) {
   };
 
   // Custom setActiveBusiness to update localStorage
+  // const handleSetActiveBusiness = (business: Business | null) => {
+  //   setActiveBusiness(business);
+  //   localStorageUtils.setActiveBusiness(business);
+  // };
+
   const handleSetActiveBusiness = (business: Business | null) => {
+    if (!isAuthenticated) {
+      setActiveBusiness(null);
+      localStorageUtils.setActiveBusiness(null);
+      return;
+    }
     setActiveBusiness(business);
     localStorageUtils.setActiveBusiness(business);
   };
