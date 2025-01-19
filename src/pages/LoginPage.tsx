@@ -109,16 +109,16 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-white py-4 md:py-12 px-2 sm:px-4 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white shadow-2xl rounded-xl p-4 md:p-6 border border-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-white py-2 px-2 sm:px-4 lg:px-8">
+      <div className="max-w-md w-full space-y-6 bg-white shadow-2xl rounded-xl p-3 md:p-6 border border-gray-100">
         <div className="text-center">
           <div className="flex items-center justify-center">
-            <CashioLogo size="lg" className="w-auto mx-auto  mb-3 md:mb-4" />
+            <CashioLogo size="lg" className="w-auto mx-auto mb-2 md:mb-4" />
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+          <h2 className="text-xl md:text-3xl font-bold text-gray-800 mb-1 md:mb-2">
             {showLoginForm ? "Welcome Back" : "Pick an account"}
           </h2>
-          <p className="text-gray-500 mb-6">
+          <p className="text-sm text-gray-500 mb-4 md:mb-6">
             {showLoginForm
               ? "Sign in to continue to your account"
               : "Choose a saved account or use another"}
@@ -172,7 +172,7 @@ export default function LoginPage() {
               </div>
             )}
 
-            <div className="space-y-4">
+            <div className="space-y-4 md:space-y-6">
               <div>
                 <label
                   htmlFor="email"
@@ -186,7 +186,7 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300 ease-in-out"
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300 ease-in-out"
                   placeholder="Enter your email"
                 />
               </div>
@@ -205,7 +205,7 @@ export default function LoginPage() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300 ease-in-out"
+                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300 ease-in-out"
                     placeholder="Enter your password"
                   />
                   <button
