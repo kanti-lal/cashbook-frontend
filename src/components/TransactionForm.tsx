@@ -90,7 +90,7 @@ export default function TransactionForm({
             id="customer"
             value={selectedCustomerId}
             onChange={(e) => setSelectedCustomerId(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-2 border dark:bg-gray-700 dark:text-gray-100 bg-white appearance-none bg-no-repeat bg-[right_0.5rem_center] bg-[length:1.5em_1.5em] bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2020%2020%22%3E%3Cpath%20fill%3D%22%236B7280%22%20d%3D%22M5.293%207.293a1%201%200%20011.414%200L10%2010.586l3.293-3.293a1%201%200%20111.414%201.414l-4%204a1%201%200%2001-1.414%200l-4-4a1%201%200%20010-1.414z%22%2F%3E%3C%2Fsvg%3E')]"
+            className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-2 border dark:bg-gray-700 dark:text-gray-100"
             required
           >
             <option value="" className="dark:text-gray-100">
@@ -211,7 +211,7 @@ export default function TransactionForm({
           id="transaction-date"
           value={transactionDate}
           onChange={(e) => setTransactionDate(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-2 border dark:bg-gray-700 dark:text-gray-100 [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:text-gray-500 [&::-webkit-calendar-picker-indicator]:hover:cursor-pointer "
+          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-2 border dark:bg-gray-700 dark:text-gray-100 appearance-none"
         />
       </div>
 
