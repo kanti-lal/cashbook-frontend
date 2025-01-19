@@ -36,20 +36,13 @@ export default function BusinessSelector() {
             >
               <div className="flex items-center gap-1 md:gap-2 md:pl-[105px]">
                 {!isMobile && (
-                  <>
-                    <ChevronLeft
-                      size={18}
-                      className="text-gray-600 dark:text-gray-300"
-                    />
-
-                    <Store
-                      size={20}
-                      className="text-gray-600 dark:text-gray-300"
-                    />
-                  </>
+                  <Store
+                    size={20}
+                    className="text-gray-600 dark:text-gray-300"
+                  />
                 )}
                 <span className="font-medium text-gray-700 dark:text-gray-200">
-                  {truncateText(activeBusiness.name, isMobile ? 16 : 21)}
+                  {truncateText(activeBusiness.name, isMobile ? 16 : 40)}
                 </span>
               </div>
             </Link>
