@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { Home, BookOpen, Users, TrendingUp, Truck } from "lucide-react";
+import { Home, BookOpen, Users, TrendingUp, Truck, Mail } from "lucide-react";
 import { useIsMobile } from "../hooks/useBreakpoint";
 
 export default function NavBar() {
@@ -92,6 +92,11 @@ export default function NavBar() {
         <Link to="/analytics" className={getNavItemClass("/analytics")}>
           <TrendingUp size={20} className="min-w-[20px]" />
           <span className="font-medium">Analytics</span>
+        </Link>
+
+        <Link to="/contact" className={getNavItemClass("/contact")}>
+          <Mail size={20} className="min-w-[20px]" />
+          <span className="font-medium">Contact</span>
         </Link>
       </div>
       <p className="text-center text-gray-500 dark:text-gray-400 text-sm mb-6 absolute bottom-10 mx-auto w-full">
