@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { AlertCircle, UserPlus, Eye, EyeOff, Loader2 } from "lucide-react";
+import { AlertCircle, UserPlus, Eye, EyeOff, LoaderCircle } from "lucide-react";
 import { CashioLogo } from "../components/common/CashioLogo";
 
 interface FormData {
@@ -56,7 +56,7 @@ export default function RegisterPage() {
           <div className="flex items-center justify-center">
             <CashioLogo size="lg" className="w-auto mx-auto  mb-3 md:mb-4" />
           </div>
-          <h2 className="text-2xl md:text-4xl font-bold text-gray-800 mb-2">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
             Create Your Account
           </h2>
           <p className="text-gray-500 mb-1">
@@ -246,7 +246,7 @@ export default function RegisterPage() {
               className="w-full  py-3 px-4 border border-transparent rounded-lg text-sm font-semibold text-white bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition duration-300 ease-in-out transform hover:scale-101 active:scale-99 flex items-center justify-center gap-2"
             >
               {isLoading ? (
-                <Loader2 className="animate-spin" size={20} />
+                <LoaderCircle className="animate-spin" size={20} />
               ) : (
                 <UserPlus size={20} />
               )}

@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { AlertCircle, LogIn, Trash2, Eye, EyeOff, Loader2 } from "lucide-react";
+import {
+  AlertCircle,
+  LogIn,
+  Trash2,
+  Eye,
+  EyeOff,
+  LoaderCircle,
+} from "lucide-react";
 import { CashioLogo } from "../components/common/CashioLogo";
 
 interface SavedAccount {
@@ -108,7 +115,7 @@ export default function LoginPage() {
           <div className="flex items-center justify-center">
             <CashioLogo size="lg" className="w-auto mx-auto  mb-3 md:mb-4" />
           </div>
-          <h2 className="text-2xl md:text-4xl font-bold text-gray-800 mb-2">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
             {showLoginForm ? "Welcome Back" : "Pick an account"}
           </h2>
           <p className="text-gray-500 mb-6">
@@ -247,7 +254,7 @@ export default function LoginPage() {
               >
                 {" "}
                 {isLoading ? (
-                  <Loader2 className="animate-spin" size={20} />
+                  <LoaderCircle className="animate-spin" size={20} />
                 ) : (
                   <LogIn size={20} />
                 )}

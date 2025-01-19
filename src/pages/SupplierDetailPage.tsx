@@ -370,7 +370,7 @@ export default function SupplierDetailPage() {
 
       {(isLoadingCustomer || isLoadingSupplierTransactions) && (
         <div className="p-4 max-w-md mx-auto text-center text-gray-600 dark:text-gray-200">
-          loading...
+          <LoaderCircle className="animate-spin" size={20} />
         </div>
       )}
     </div>

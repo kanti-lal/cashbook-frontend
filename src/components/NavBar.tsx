@@ -94,6 +94,9 @@ export default function NavBar() {
           <span className="font-medium">Analytics</span>
         </Link>
       </div>
+      <p className="text-center text-gray-500 dark:text-gray-400 text-sm mb-6 absolute bottom-10 mx-auto w-full">
+        &copy; {new Date().getFullYear()} Cashio. All rights reserved.
+      </p>
     </nav>
   );
 }

@@ -5,7 +5,7 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { Loader2 } from "lucide-react";
+import { LoaderCircle } from "lucide-react";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { BusinessProvider } from "./context/BusinessContext";
 import { ThemeProvider } from "./context/ThemeContext";
@@ -42,7 +42,7 @@ const NotFoundPage = lazy(() => import("./pages/NotFoundPage"));
 function LoadingSpinner() {
   return (
     <div className="fixed inset-0 flex items-center justify-center">
-      <Loader2 className="w-8 h-8 animate-spin text-purple-500" />
+      <LoaderCircle className="w-8 h-8 animate-spin text-purple-500" />
     </div>
   );
 }

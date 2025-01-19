@@ -204,12 +204,12 @@ export default function CashbookPage() {
       {/* Fixed top section */}
       <div className="flex-none bg-gray-50 dark:bg-gray-900">
         <div className="max-w-md md:max-w-4xl mx-auto p-4">
-          <h1 className="text-2xl font-bold mb-1 md:mb-3 dark:text-white">
+          <h1 className="text-2xl font-bold mb-2 md:mb-3 dark:text-white">
             Cashbook
           </h1>
 
           {/* Summary Cards */}
-          <div className="grid grid-cols-2 gap-3 mb-2 md:mb-3">
+          <div className="grid grid-cols-2 gap-3 mb-3 md:mb-4">
             <div className="bg-white dark:bg-gray-800 p-2 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700">
               <div className="flex items-center gap-1.5 mb-1">
                 <Wallet className="w-4 h-4 text-purple-600 dark:text-purple-400" />
@@ -245,7 +245,7 @@ export default function CashbookPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 mb-2 md:mb-3">
+          <div className="grid grid-cols-2 gap-3 mb-3 md:mb-4">
             <button
               onClick={() => handleTransactionClick("IN")}
               className="flex items-center justify-center gap-2 py-2.5 md:py-3 px-4 bg-green-100 dark:bg-green-900/30 rounded-lg hover:bg-green-200 dark:hover:bg-green-900/50 transition-colors"

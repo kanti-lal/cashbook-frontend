@@ -12,9 +12,10 @@ export default function UserAvatar({ name, size = "md" }: UserAvatarProps) {
     lg: "w-12 h-12 text-lg",
   };
 
+  // dark:bg-purple-600 text-purple-600 dark:text-purple-100
   return (
     <div
-      className={`${sizeClasses[size]} rounded-full bg-purple-100 text-purple-600 font-medium flex items-center justify-center`}
+      className={`${sizeClasses[size]} rounded-full bg-purple-200 dark:bg-purple-600 text-purple-700 dark:text-purple-100 font-medium flex items-center justify-center`}
     >
       {initial}
     </div>

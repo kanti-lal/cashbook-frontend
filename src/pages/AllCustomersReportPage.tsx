@@ -72,7 +72,7 @@ export default function AllCustomersReportPage() {
 
   return (
     <div className="max-w-md md:max-w-4xl mx-auto p-4 pb-20 dark:bg-gray-900">
-      <div className="flex items-center gap-2 mb-6">
+      <div className="flex items-center gap-2 mb-4 md:mb-6">
         <Link
           to="/customers"
           className="p-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full"
@@ -85,7 +85,7 @@ export default function AllCustomersReportPage() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-2 gap-4 mb-4 md:mb-6">
         <div className="bg-green-50 dark:bg-green-900/30 p-4 rounded-lg">
           <p className="text-sm text-green-800 dark:text-green-300">
             Total Received
