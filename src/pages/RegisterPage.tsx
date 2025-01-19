@@ -56,7 +56,7 @@ export default function RegisterPage() {
           <div className="flex items-center justify-center">
             <CashioLogo size="lg" className="w-auto mx-auto  mb-3 md:mb-4" />
           </div>
-          <h2 className="text-2xl md:text-4xl font-bold text-gray-800 mb-2">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
             Create Your Account
           </h2>
           <p className="text-gray-500 mb-1">
