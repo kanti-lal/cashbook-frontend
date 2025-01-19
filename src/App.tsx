@@ -13,6 +13,7 @@ import BusinessSelector from "./components/BusinessSelector";
 import NavBar from "./components/NavBar";
 import "./index.css";
 import { useIsMobile } from "./hooks/useBreakpoint";
+import Contact from "./pages/Contact";
 
 // Lazy load all pages
 const LoginPage = lazy(() => import("./pages/LoginPage"));
@@ -210,6 +211,16 @@ function App() {
                   element={<ForgotPasswordPage />}
                 />
                 <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+                <Route
+                  path="/contact"
+                  // element={<Contact />}
+                  element={
+                    <ProtectedRoute>
+                      <Contact />
+                    </ProtectedRoute>
+                  }
+                />
 
                 <Route path="*" element={<NotFoundPage />} />
               </Routes>

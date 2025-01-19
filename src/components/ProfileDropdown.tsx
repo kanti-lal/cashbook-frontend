@@ -2,7 +2,7 @@ import { useState, useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 import UserAvatar from "./UserAvatar";
-import { LogOut, User, Moon, Sun } from "lucide-react";
+import { LogOut, User, Moon, Sun, Mail } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useOnClickOutside } from "../hooks/useOnClickOutside";
 
@@ -48,6 +48,15 @@ export default function ProfileDropdown() {
             )}
             {theme === "dark" ? "Light Mode" : "Dark Mode"}
           </button>
+
+          <Link
+            to="/contact"
+            onClick={() => setIsOpen(false)}
+            className="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            <Mail size={16} className="mr-2" />
+            Contact
+          </Link>
 
           <button
             onClick={() => {
