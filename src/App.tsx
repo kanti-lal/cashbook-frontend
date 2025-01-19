@@ -58,7 +58,7 @@ function ProtectedLayout({ children }: { children: React.ReactNode }) {
         // Desktop Layout
         <div className="flex flex-1">
           <NavBar />
-          <main className="flex-1 ml-64 px-8 py-6 mt-6">
+          <main className="flex-1 ml-64 px-8 py-6 mt-8">
             <Suspense fallback={<LoadingSpinner />}>{children}</Suspense>
           </main>
         </div>
