@@ -211,7 +211,7 @@ export default function TransactionForm({
           id="transaction-date"
           value={transactionDate}
           onChange={(e) => setTransactionDate(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-2 border dark:bg-gray-700 dark:text-gray-100"
+          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-purple-500 focus:ring-purple-500 p-2 border dark:bg-gray-700 dark:text-gray-100 appearance-none"
         />
       </div>
 
