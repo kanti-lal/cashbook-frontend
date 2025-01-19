@@ -1,19 +1,11 @@
 import { useProfile } from "../hooks/useProfile";
 import { useNavigate } from "react-router-dom";
 import { format } from "date-fns";
-import { Phone, MapPin, Calendar, Mail, Edit2 } from "lucide-react";
+import { Phone, MapPin, Calendar, Edit2 } from "lucide-react";
 
 export default function ProfilePage() {
   const { data: profile, isLoading } = useProfile();
   const navigate = useNavigate();
-
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500" />
-      </div>
-    );
-  }
 
   const ProfileItem = ({ icon: Icon, label, value }: any) => (
     <div className="flex items-start space-x-3 p-3 rounded-lg bg-white shadow-sm">
