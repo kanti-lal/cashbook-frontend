@@ -51,7 +51,7 @@ export default function RegisterPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-white py-4 md:py-12 px-2 sm:px-6 lg:px-8">
-      <div className="max-w-xl w-full space-y-8 bg-white shadow-2xl rounded-xl p-4 md:p-6 border border-gray-100">
+      <div className="max-w-xl w-full space-y-4 md:space-y-6 bg-white shadow-2xl rounded-xl p-4 md:p-6 border border-gray-100">
         <div className="text-center">
           <div className="flex items-center justify-center">
             <CashioLogo size="lg" className="w-auto mx-auto  mb-3 md:mb-4" />
@@ -59,7 +59,7 @@ export default function RegisterPage() {
           <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
             Create Your Account
           </h2>
-          <p className="text-gray-500 mb-1">
+          <p className="text-gray-500 mb-1 md:text-base text-sm">
             Join our platform and unlock endless possibilities
           </p>
         </div>
@@ -211,6 +211,7 @@ export default function RegisterPage() {
               <input
                 id="dateOfBirth"
                 type="date"
+                placeholder="YYYY-MM-DD"
                 value={formData.dateOfBirth}
                 onChange={(e) =>
                   setFormData({ ...formData, dateOfBirth: e.target.value })
