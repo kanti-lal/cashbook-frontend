@@ -308,7 +308,7 @@ export default function AnalyticsPage() {
       </div>
 
       {/* Desktop Layout (unchanged) */}
-      <div className="hidden md:block max-w-4xl mx-auto">
+      <div className="hidden md:block max-w-4xl mx-auto mt-2">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold dark:text-white">
             Business Analytics Dashboard
