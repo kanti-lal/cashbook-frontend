@@ -105,6 +105,7 @@ export default function ProfileEditPage() {
             <InputField
               label="Date of Birth"
               type="date"
+              placeholder="DD-MM-YYYY"
               {...register("dateOfBirth")}
               error={errors.dateOfBirth}
             />
