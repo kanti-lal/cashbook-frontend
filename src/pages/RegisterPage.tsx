@@ -211,12 +211,12 @@ export default function RegisterPage() {
               <input
                 id="dateOfBirth"
                 type="date"
-                placeholder="YYYY-MM-DD"
+                placeholder="DD-MM-YYYY"
                 value={formData.dateOfBirth}
                 onChange={(e) =>
                   setFormData({ ...formData, dateOfBirth: e.target.value })
                 }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300 ease-in-out [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:text-gray-500 [&::-webkit-calendar-picker-indicator]:hover:cursor-pointer dark:bg-white dark:text-gray-900"
+                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300 ease-in-out [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:text-gray-500 [&::-webkit-calendar-picker-indicator]:hover:cursor-pointer dark:bg-white dark:text-gray-900 [&::-webkit-calendar-picker-indicator]:appearance-none"
               />
             </div>
           </div>
