@@ -16,12 +16,17 @@ export default function BusinessSelector() {
       <div
         className={`${
           isMobile ? "max-w-md" : ""
-        } mx-auto flex items-center px-4 justify-between h-14`}
+        } mx-auto flex items-center px-2 md:px-4 justify-between h-14`}
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-1 md:gap-4">
           {!isMobile && (
             <Link to="/" className="">
               <CashioLogo size="md" />
+            </Link>
+          )}
+          {isMobile && (
+            <Link to="/" className="">
+              <BookIcon className={`h-8 text-purple-500`} />
             </Link>
           )}
           {activeBusiness ? (
@@ -29,26 +34,34 @@ export default function BusinessSelector() {
               to="/"
               className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
             >
-              <div className="flex items-center gap-2 md:pl-[105px]">
-                <ChevronLeft
-                  size={18}
-                  className="text-gray-600 dark:text-gray-300"
-                />
-                <Store size={20} className="text-gray-600 dark:text-gray-300" />
+              <div className="flex items-center gap-1 md:gap-2 md:pl-[105px]">
+                {!isMobile && (
+                  <>
+                    <ChevronLeft
+                      size={18}
+                      className="text-gray-600 dark:text-gray-300"
+                    />
+
+                    <Store
+                      size={20}
+                      className="text-gray-600 dark:text-gray-300"
+                    />
+                  </>
+                )}
                 <span className="font-medium text-gray-700 dark:text-gray-200">
                   {truncateText(activeBusiness.name, isMobile ? 16 : 21)}
                 </span>
               </div>
             </Link>
           ) : (
-            <div className="text-gray-600 dark:text-gray-300  md:pl-[105px] flex items-center gap-2">
+            <div className="text-gray-600 dark:text-gray-300  md:pl-[105px] flex items-center gap-1 md:gap-2">
               <Store size={20} />
               Select a business
             </div>
           )}
         </div>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 md:gap-4">
           <Link to="/" className="text-sm text-gray-500 dark:text-gray-400">
             ({businesses.length}{" "}
             {businesses.length === 1 ? "business" : "businesses"})
