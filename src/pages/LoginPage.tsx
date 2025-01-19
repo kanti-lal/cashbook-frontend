@@ -1,7 +1,14 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { AlertCircle, LogIn, Trash2, Eye, EyeOff, Loader2 } from "lucide-react";
+import {
+  AlertCircle,
+  LogIn,
+  Trash2,
+  Eye,
+  EyeOff,
+  LoaderCircle,
+} from "lucide-react";
 import { CashioLogo } from "../components/common/CashioLogo";
 
 interface SavedAccount {
@@ -247,7 +254,7 @@ export default function LoginPage() {
               >
                 {" "}
                 {isLoading ? (
-                  <Loader2 className="animate-spin" size={20} />
+                  <LoaderCircle className="animate-spin" size={20} />
                 ) : (
                   <LogIn size={20} />
                 )}

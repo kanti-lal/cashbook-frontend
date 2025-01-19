@@ -41,8 +41,9 @@ export default function BusinessSelector() {
               </div>
             </Link>
           ) : (
-            <div className="text-gray-600 dark:text-gray-300">
+            <div className="text-gray-600 dark:text-gray-300  md:pl-[105px] flex items-center gap-2">
               <Store size={20} />
+              Select a business
             </div>
           )}
         </div>

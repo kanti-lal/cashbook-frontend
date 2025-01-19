@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Plus, Store, CheckCircle, BookOpen, Contact } from "lucide-react";
+import {
+  Plus,
+  Store,
+  CheckCircle,
+  BookOpen,
+  Contact,
+  LoaderCircle,
+} from "lucide-react";
 import { useBusiness } from "../context/BusinessContext";
 import { Business } from "../api/types";
 import Modal from "../components/Modal";
@@ -45,14 +52,14 @@ export default function HomePage() {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center h-screen dark:text-gray-200">
-        Loading...
+        <LoaderCircle className="w-8 h-8 animate-spin text-purple-500" />
       </div>
     );
   }
 
   return (
     <div className="max-w-md md:max-w-4xl mx-auto p-4 pb-20 dark:bg-gray-900">
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-4 md:mb-6">
         <h1 className="text-2xl font-bold dark:text-white">My Businesses</h1>
         <button
           onClick={() => setShowAddForm(true)}
@@ -64,7 +71,7 @@ export default function HomePage() {
       </div>
 
       {activeBusiness && (
-        <div className="mb-6 grid grid-cols-2 gap-4">
+        <div className="mb-4 md:mb-6 grid grid-cols-2 gap-4">
           <button
             onClick={() => navigate("/cashbook")}
             disabled={!activeBusiness}

@@ -129,7 +129,7 @@ export default function CustomersPage() {
       </Modal>
 
       {/* View Report Button */}
-      <div className="flex gap-2 mb-3 w-full">
+      <div className="flex gap-2 mb-1 md:mb-3 w-full">
         <div className="w-full">
           <Link
             to="/customers/report"
@@ -158,7 +158,7 @@ export default function CustomersPage() {
       </div>
 
       {/* Balance Summary */}
-      <div className="grid grid-cols-2 gap-4 mb-6">
+      <div className="grid grid-cols-2 gap-4 mb-4 md:mb-6">
         <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900 dark:to-green-800 p-4 rounded-lg">
           <p className="text-sm text-green-800 dark:text-green-200">
             You Will Give
