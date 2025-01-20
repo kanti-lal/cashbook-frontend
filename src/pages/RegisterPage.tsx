@@ -187,11 +187,13 @@ export default function RegisterPage() {
                 htmlFor="mobile"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Mobile (optional)
+                Mobile*
               </label>
               <input
                 id="mobile"
                 type="tel"
+                required
+                maxLength={10}
                 value={formData.mobile}
                 onChange={(e) =>
                   setFormData({ ...formData, mobile: e.target.value })
@@ -206,11 +208,12 @@ export default function RegisterPage() {
                 htmlFor="dateOfBirth"
                 className="block text-sm font-medium text-gray-700 mb-2"
               >
-                Date of Birth (optional)
+                Date of Birth*
               </label>
               <input
                 id="dateOfBirth"
                 type="date"
+                required
                 placeholder="DD-MM-YYYY"
                 value={formData.dateOfBirth}
                 onChange={(e) =>

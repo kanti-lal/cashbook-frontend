@@ -103,9 +103,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const registerMutation = useMutation({
     mutationFn: authApi.register,
     onSuccess: (user: any) => {
-      setUser(user?.user);
+      setUser(user?.user?.user);
       setIsAuthenticated(true);
-      localStorage.setItem(USER_KEY, JSON.stringify(user));
+      localStorage.setItem(USER_KEY, JSON.stringify(user?.user?.user));
     },
   });
 
@@ -142,8 +142,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = async (data: RegisterData) => {
     setIsLoading(true);
-    await registerMutation.mutateAsync(data);
-    setIsLoading(false);
+    try {
+      await registerMutation.mutateAsync(data);
+    } catch (error) {
+      console.error("error", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const updateProfile = async (data: UpdateProfileData) => {
