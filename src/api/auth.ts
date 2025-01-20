@@ -136,7 +136,6 @@ export const authApi = {
     localStorage.removeItem("auth_user");
     localStorage.removeItem("auth_token");
     localStorage.removeItem("activeBusiness");
-    localStorage.removeItem("theme");
     // localStorage.clear();
   },
 };

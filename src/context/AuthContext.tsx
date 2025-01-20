@@ -177,7 +177,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     localStorage.removeItem(USER_KEY);
     localStorage.removeItem(AUTH_TOKEN_KEY);
     localStorage.removeItem("activeBusiness");
-    localStorage.removeItem("theme");
     // localStorage.clear();
     queryClient.clear();
     setUser(null);
