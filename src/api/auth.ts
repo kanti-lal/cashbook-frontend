@@ -6,6 +6,14 @@ interface LoginResponse {
   user: UserProfile;
 }
 
+interface RegisterResponse {
+  message: string;
+  user: {
+    token: string;
+    user: UserProfile;
+  };
+}
+
 interface UserProfile {
   id: number;
   email: string;
@@ -62,13 +70,18 @@ export const authApi = {
   login: async (data: LoginData) => {
     const response = await apiClient.post<LoginResponse>("/auth/login", data);
     // Store the token in localStorage
-    localStorage.setItem("auth_token", response.data.token);
+    localStorage.setItem("auth_token", response?.data?.token);
     return response.data.user;
   },
 
   // Register
   register: async (data: RegisterData) => {
-    const response = await apiClient.post<UserProfile>("/auth/register", data);
+    const response = await apiClient.post<RegisterResponse>(
+      "/auth/register",
+      data
+    );
+    // Store the token in localStorage
+    localStorage.setItem("auth_token", response?.data?.user?.token);
     return response.data;
   },
 

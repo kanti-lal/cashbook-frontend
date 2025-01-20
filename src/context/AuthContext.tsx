@@ -103,9 +103,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const registerMutation = useMutation({
     mutationFn: authApi.register,
     onSuccess: (user: any) => {
-      setUser(user?.user);
+      setUser(user?.user?.user);
       setIsAuthenticated(true);
-      localStorage.setItem(USER_KEY, JSON.stringify(user));
+      localStorage.setItem(USER_KEY, JSON.stringify(user?.user?.user));
     },
   });
 
