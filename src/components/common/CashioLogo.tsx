@@ -25,7 +25,7 @@ export function CashioLogo({ size = "md", className = "" }: CashioLogoProps) {
     <div className={`flex items-center gap-1 ${className}`}>
       <BookIcon className={`${sizeConfig[size].icon} text-purple-500`} />
       <span
-        className={`${sizeConfig[size].text} font-medium text-black font-crostan`}
+        className={`${sizeConfig[size].text} font-semibold text-black font-titillium dark:text-white `}
       >
         Cashio
       </span>

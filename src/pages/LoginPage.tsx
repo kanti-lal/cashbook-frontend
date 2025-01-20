@@ -109,16 +109,16 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-white py-2 px-2 sm:px-4 lg:px-8">
-      <div className="max-w-md w-full space-y-6 bg-white shadow-2xl rounded-xl p-3 md:p-6 border border-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-white dark:from-gray-900 dark:to-gray-800 py-2 px-2 sm:px-4 lg:px-8">
+      <div className="max-w-md w-full space-y-6 bg-white dark:bg-gray-800 shadow-2xl rounded-xl p-3 md:p-6 border border-gray-100 dark:border-gray-700">
         <div className="text-center">
           <div className="flex items-center justify-center">
             <CashioLogo size="lg" className="w-auto mx-auto mb-2 md:mb-4" />
           </div>
-          <h2 className="text-xl md:text-3xl font-bold text-gray-800 mb-1 md:mb-2">
+          <h2 className="text-xl md:text-3xl font-bold text-gray-800 dark:text-white mb-1 md:mb-2">
             {showLoginForm ? "Welcome Back" : "Pick an account"}
           </h2>
-          <p className="text-sm text-gray-500 mb-4 md:mb-6">
+          <p className="text-sm text-gray-500 dark:text-gray-400 mb-4 md:mb-6">
             {showLoginForm
               ? "Sign in to continue to your account"
               : "Choose a saved account or use another"}
@@ -138,19 +138,21 @@ export default function LoginPage() {
               <div
                 key={index}
                 onClick={() => handleSavedAccountClick(account)}
-                className="flex items-center justify-between p-4 border rounded-lg cursor-pointer hover:bg-gray-50"
+                className="flex items-center justify-between p-4 border dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700"
               >
                 <div className="flex items-center">
-                  <div className="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
-                    <span className="text-purple-600 text-lg">
+                  <div className="w-10 h-10 bg-purple-100 dark:bg-purple-900 rounded-full flex items-center justify-center">
+                    <span className="text-purple-600 dark:text-purple-300 text-lg">
                       {account.email[0].toUpperCase()}
                     </span>
                   </div>
-                  <span className="ml-4">{account.email}</span>
+                  <span className="ml-4 dark:text-gray-300">
+                    {account.email}
+                  </span>
                 </div>
                 <button
                   onClick={(e) => handleRemoveAccount(account, e)}
-                  className="text-gray-400 hover:text-red-500 p-2"
+                  className="text-gray-400 hover:text-red-500 dark:text-gray-500 dark:hover:text-red-400 p-2"
                 >
                   <Trash2 size={20} />
                 </button>
@@ -158,7 +160,7 @@ export default function LoginPage() {
             ))}
             <button
               onClick={handleUseAnotherAccount}
-              className="w-full mt-4 flex items-center justify-center p-4 border rounded-lg hover:bg-gray-50"
+              className="w-full mt-4 flex items-center justify-center p-4 border dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 dark:text-gray-300"
             >
               Use Another Account
             </button>
@@ -176,7 +178,7 @@ export default function LoginPage() {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                 >
                   Email Address
                 </label>
@@ -186,7 +188,7 @@ export default function LoginPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300 ease-in-out"
+                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300 ease-in-out dark:bg-gray-700 dark:text-white"
                   placeholder="Enter your email"
                 />
               </div>
@@ -194,7 +196,7 @@ export default function LoginPage() {
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700 mb-2"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
                 >
                   Password
                 </label>
@@ -205,13 +207,13 @@ export default function LoginPage() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300 ease-in-out"
+                    className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300 ease-in-out dark:bg-gray-700 dark:text-white"
                     placeholder="Enter your password"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
                   >
                     {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                   </button>
@@ -226,11 +228,11 @@ export default function LoginPage() {
                   type="checkbox"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
+                  className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 dark:border-gray-600 rounded dark:bg-gray-700"
                 />
                 <label
                   htmlFor="remember-me"
-                  className="ml-2 block text-sm text-gray-900"
+                  className="ml-2 block text-sm text-gray-900 dark:text-gray-300"
                 >
                   Remember me
                 </label>
@@ -239,7 +241,7 @@ export default function LoginPage() {
               <div className="text-sm">
                 <Link
                   to="/forgot-password"
-                  className="font-medium text-purple-600 hover:text-purple-500"
+                  className="font-medium text-purple-600 hover:text-purple-500 dark:text-purple-400 dark:hover:text-purple-300"
                 >
                   Forgot password?
                 </Link>
@@ -263,11 +265,11 @@ export default function LoginPage() {
             </div>
 
             <div className="text-center">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-gray-400">
                 Don't have an account?{" "}
                 <Link
                   to="/register"
-                  className="font-medium text-purple-600 hover:text-purple-500"
+                  className="font-medium text-purple-600 hover:text-purple-500 dark:text-purple-400 dark:hover:text-purple-300"
                 >
                   Sign up
                 </Link>

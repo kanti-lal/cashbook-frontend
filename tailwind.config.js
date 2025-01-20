@@ -5,7 +5,10 @@ export default {
   theme: {
     extend: {
       fontFamily: {
+        jost: ["Jost", "sans-serif"],
+        "noto-sans": ["Noto Sans", "sans-serif"],
         crostan: ["Crostan", "sans-serif"],
+        titillium: ["Titillium Web", "sans-serif"],
       },
     },
   },
