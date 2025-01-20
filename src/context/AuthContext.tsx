@@ -142,8 +142,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const register = async (data: RegisterData) => {
     setIsLoading(true);
-    await registerMutation.mutateAsync(data);
-    setIsLoading(false);
+    try {
+      await registerMutation.mutateAsync(data);
+    } catch (error) {
+      console.error("error", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const updateProfile = async (data: UpdateProfileData) => {
