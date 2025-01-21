@@ -214,7 +214,7 @@ export default function TransactionForm({
           placeholder="DD-MM-YYYY"
           value={transactionDate}
           onChange={(e) => setTransactionDate(e.target.value)}
-          className="mt-1 block w-full px-3 py-2 text-base border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white appearance-none"
+          className="mt-1 block h-[42px] w-full px-3 py-2 text-base border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white appearance-none"
         />
       </div>
 
