@@ -106,6 +106,7 @@ export default function ProfileEditPage() {
               label="Date of Birth"
               type="date"
               placeholder="DD-MM-YYYY"
+              className="h-[42px]"
               {...register("dateOfBirth")}
               error={errors.dateOfBirth}
             />

@@ -146,13 +146,13 @@ export default function ReportView({
             type="date"
             value={startDate}
             onChange={(e) => setStartDate(e.target.value)}
-            className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500"
+            className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 h-[42px]"
           />
           <input
             type="date"
             value={endDate}
             onChange={(e) => setEndDate(e.target.value)}
-            className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500"
+            className="px-3 py-2 border rounded-lg focus:ring-2 focus:ring-purple-500 h-[42px]"
           />
         </div>
       )}
