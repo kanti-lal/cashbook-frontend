@@ -36,23 +36,23 @@ export default function ResetPasswordPage() {
 
   if (!token) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="h-[100dvh] flex items-center justify-center">
         <div className="text-red-600">Invalid reset token</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-purple-50 to-white dark:from-gray-900 dark:to-gray-800 py-12 px-2 md:px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8 bg-white dark:bg-gray-800 shadow-2xl rounded-xl p-4 md:p-6 border border-gray-100 dark:border-gray-700">
+    <div className="h-[100dvh] flex items-center justify-center bg-gradient-to-br from-purple-50 to-white dark:from-gray-900 dark:to-gray-800 px-2 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full bg-white dark:bg-gray-800 shadow-2xl rounded-xl p-3 md:p-6 border border-gray-100 dark:border-gray-700">
         <div className="text-center">
           <div className="flex items-center justify-center">
-            <CashioLogo size="lg" className="w-auto mx-auto mb-3 md:mb-4" />
+            <CashioLogo size="lg" className="w-auto mx-auto mb-1 md:mb-4" />
           </div>
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">
+          <h2 className="text-lg md:text-3xl font-bold text-gray-800 dark:text-white mb-1 md:mb-2">
             Reset Password
           </h2>
-          <p className="text-gray-500 dark:text-gray-400 mb-6">
+          <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mb-3 md:mb-6">
             Enter your new password
           </p>
         </div>
