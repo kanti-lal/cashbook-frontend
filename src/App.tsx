@@ -14,6 +14,8 @@ import NavBar from "./components/NavBar";
 import "./index.css";
 import { useIsMobile } from "./hooks/useBreakpoint";
 import Contact from "./pages/Contact";
+import { HelmetProvider } from "react-helmet-async";
+import { SEO } from "./components/SEO";
 
 // Lazy load all pages
 const LoginPage = lazy(() => import("./pages/LoginPage"));
@@ -93,142 +95,148 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
 
 function App() {
   return (
-    <ThemeProvider>
-      <AuthProvider>
-        <BusinessProvider>
-          <Router>
-            <Suspense fallback={<LoadingSpinner />}>
-              <Routes>
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
+    <HelmetProvider>
+      <SEO />
+      <ThemeProvider>
+        <AuthProvider>
+          <BusinessProvider>
+            <Router>
+              <Suspense fallback={<LoadingSpinner />}>
+                <Routes>
+                  <Route path="/login" element={<LoginPage />} />
+                  <Route path="/register" element={<RegisterPage />} />
 
-                <Route
-                  path="/"
-                  element={
-                    <ProtectedRoute>
-                      <HomePage />
-                    </ProtectedRoute>
-                  }
-                />
+                  <Route
+                    path="/"
+                    element={
+                      <ProtectedRoute>
+                        <HomePage />
+                      </ProtectedRoute>
+                    }
+                  />
 
-                <Route
-                  path="/cashbook"
-                  element={
-                    <ProtectedRoute>
-                      <CashbookPage />
-                    </ProtectedRoute>
-                  }
-                />
+                  <Route
+                    path="/cashbook"
+                    element={
+                      <ProtectedRoute>
+                        <CashbookPage />
+                      </ProtectedRoute>
+                    }
+                  />
 
-                <Route
-                  path="/transactions/:transactionId"
-                  element={
-                    <ProtectedRoute>
-                      <TransactionDetailPage />
-                    </ProtectedRoute>
-                  }
-                />
+                  <Route
+                    path="/transactions/:transactionId"
+                    element={
+                      <ProtectedRoute>
+                        <TransactionDetailPage />
+                      </ProtectedRoute>
+                    }
+                  />
 
-                <Route
-                  path="/customers"
-                  element={
-                    <ProtectedRoute>
-                      <CustomersPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/customers/:customerId"
-                  element={
-                    <ProtectedRoute>
-                      <CustomerDetailPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/customers/report"
-                  element={
-                    <ProtectedRoute>
-                      <AllCustomersReportPage />
-                    </ProtectedRoute>
-                  }
-                />
+                  <Route
+                    path="/customers"
+                    element={
+                      <ProtectedRoute>
+                        <CustomersPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/customers/:customerId"
+                    element={
+                      <ProtectedRoute>
+                        <CustomerDetailPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/customers/report"
+                    element={
+                      <ProtectedRoute>
+                        <AllCustomersReportPage />
+                      </ProtectedRoute>
+                    }
+                  />
 
-                <Route
-                  path="/suppliers"
-                  element={
-                    <ProtectedRoute>
-                      <SuppliersPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/suppliers/:supplierId"
-                  element={
-                    <ProtectedRoute>
-                      <SupplierDetailPage />
-                    </ProtectedRoute>
-                  }
-                />
-                <Route
-                  path="/suppliers/report"
-                  element={
-                    <ProtectedRoute>
-                      <AllSuppliersReportPage />
-                    </ProtectedRoute>
-                  }
-                />
+                  <Route
+                    path="/suppliers"
+                    element={
+                      <ProtectedRoute>
+                        <SuppliersPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/suppliers/:supplierId"
+                    element={
+                      <ProtectedRoute>
+                        <SupplierDetailPage />
+                      </ProtectedRoute>
+                    }
+                  />
+                  <Route
+                    path="/suppliers/report"
+                    element={
+                      <ProtectedRoute>
+                        <AllSuppliersReportPage />
+                      </ProtectedRoute>
+                    }
+                  />
 
-                <Route
-                  path="/profile"
-                  element={
-                    <ProtectedRoute>
-                      <ProfilePage />
-                    </ProtectedRoute>
-                  }
-                />
+                  <Route
+                    path="/profile"
+                    element={
+                      <ProtectedRoute>
+                        <ProfilePage />
+                      </ProtectedRoute>
+                    }
+                  />
 
-                <Route
-                  path="/profile/edit"
-                  element={
-                    <ProtectedRoute>
-                      <ProfileEditPage />
-                    </ProtectedRoute>
-                  }
-                />
+                  <Route
+                    path="/profile/edit"
+                    element={
+                      <ProtectedRoute>
+                        <ProfileEditPage />
+                      </ProtectedRoute>
+                    }
+                  />
 
-                <Route
-                  path="/analytics"
-                  element={
-                    <ProtectedRoute>
-                      <AnalyticsPage />
-                    </ProtectedRoute>
-                  }
-                />
+                  <Route
+                    path="/analytics"
+                    element={
+                      <ProtectedRoute>
+                        <AnalyticsPage />
+                      </ProtectedRoute>
+                    }
+                  />
 
-                <Route
-                  path="/forgot-password"
-                  element={<ForgotPasswordPage />}
-                />
-                <Route path="/reset-password" element={<ResetPasswordPage />} />
+                  <Route
+                    path="/forgot-password"
+                    element={<ForgotPasswordPage />}
+                  />
+                  <Route
+                    path="/reset-password"
+                    element={<ResetPasswordPage />}
+                  />
 
-                <Route
-                  path="/contact"
-                  // element={<Contact />}
-                  element={
-                    <ProtectedRoute>
-                      <Contact />
-                    </ProtectedRoute>
-                  }
-                />
+                  <Route
+                    path="/contact"
+                    // element={<Contact />}
+                    element={
+                      <ProtectedRoute>
+                        <Contact />
+                      </ProtectedRoute>
+                    }
+                  />
 
-                <Route path="*" element={<NotFoundPage />} />
-              </Routes>
-            </Suspense>
-          </Router>
-        </BusinessProvider>
-      </AuthProvider>
-    </ThemeProvider>
+                  <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+              </Suspense>
+            </Router>
+          </BusinessProvider>
+        </AuthProvider>
+      </ThemeProvider>
+    </HelmetProvider>
   );
 }
 
